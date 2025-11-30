@@ -50,17 +50,15 @@ MongoDB Atlas is a fully managed cloud database that works perfectly with Vercel
 
 ### Local Setup (.env)
 ```bash
-DATABASE_URL="mongodb+srv://user:pass@cluster0.xxxxx.mongodb.net/ticketmaster?retryWrites=true&w=majority"
+DATABASE_URL="mongodb+srv://sanusijohn0_db_user:<db_password>@cluster0.gtpccca.mongodb.net/ticketmaster?retryWrites=true&w=majority&appName=Cluster0"
 ```
+*Replace `<db_password>` with your actual database password.*
+
+**Note**: Images are stored as base64 data URLs directly in MongoDB, so no external storage is needed.
 
 ### Vercel Setup
 1. Go to Vercel Project Settings → **Environment Variables**
 2. Add `DATABASE_URL` with your MongoDB connection string
-
-### Supabase Storage (for images)
-3. Add these for image uploads:
-   - `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase Project URL
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase Anon Key
 
 ## 7. Deploy to Vercel
 

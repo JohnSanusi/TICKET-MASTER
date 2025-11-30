@@ -35,9 +35,10 @@ export function CreateEventForm() {
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target as HTMLInputElement
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: type === 'number' ? Number(value) : value,
     })
   }
 

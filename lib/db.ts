@@ -20,6 +20,11 @@ async function connectDB() {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
+      serverApi: {
+        version: "1",
+        strict: true,
+        deprecationErrors: true,
+      },
     }
 
     cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
