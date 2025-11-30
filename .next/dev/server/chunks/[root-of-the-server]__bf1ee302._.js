@@ -209,7 +209,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$jspdf$2f$dis
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$qrcode$2f$lib$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/qrcode/lib/index.js [app-route] (ecmascript)");
 ;
 ;
-async function generateTicketPDF(eventTitle, seatInfo, eventDate, eventTime, location, ticketId, attendeeName) {
+async function generateTicketPDF(eventTitle, seatInfo, eventDate, eventTime, location, ticketId, attendeeName, artistName, section, row, ticketType, level) {
     // Generate QR code
     const qrCodeData = await __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$qrcode$2f$lib$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"].toDataURL(ticketId);
     // Create PDF - Portrait A4
@@ -260,6 +260,15 @@ async function generateTicketPDF(eventTitle, seatInfo, eventDate, eventTime, loc
     pdf.text(initials, startX + 17.5, startY + 19.5, {
         align: "center"
     });
+    // Artist Name (if provided)
+    let titleY = startY + 16;
+    if (artistName) {
+        pdf.setTextColor(107, 114, 128); // #6b7280
+        pdf.setFontSize(11);
+        pdf.setFont("helvetica", "normal");
+        pdf.text(artistName, startX + 35, titleY);
+        titleY += 6;
+    }
     // Event Title
     pdf.setTextColor(17, 24, 39); // #111827
     pdf.setFontSize(16);
@@ -267,9 +276,9 @@ async function generateTicketPDF(eventTitle, seatInfo, eventDate, eventTime, loc
     // Capitalize first letter of each word
     const capitalizedTitle = eventTitle.replace(/\b\w/g, (l)=>l.toUpperCase());
     const titleLines = pdf.splitTextToSize(capitalizedTitle, leftWidth - 40);
-    pdf.text(titleLines, startX + 35, startY + 16);
+    pdf.text(titleLines, startX + 35, titleY);
     // Grid Info
-    const gridY = startY + 40;
+    let gridY = startY + 40;
     const colWidth = (leftWidth - 20) / 3;
     // Labels style
     const labelColor = [
@@ -298,19 +307,37 @@ async function generateTicketPDF(eventTitle, seatInfo, eventDate, eventTime, loc
             pdf.text(value, x, y + 5);
         }
     };
-    // WHEN
-    drawField("WHEN", [
-        eventDate,
-        eventTime
-    ], startX + 10, gridY);
-    // WHERE
+    // First Row: Section, Row, Seat
+    let fieldX = startX + 10;
+    if (section) {
+        drawField("SECTION", section, fieldX, gridY);
+        fieldX += colWidth;
+    }
+    if (row) {
+        drawField("ROW", row, fieldX, gridY);
+        fieldX += colWidth;
+    }
+    drawField("STAT", seatInfo, fieldX, gridY);
+    // Second Row: Date, Time, Location
+    gridY += 20;
+    drawField("DATE", eventDate, startX + 10, gridY);
+    drawField("TIME", eventTime, startX + 10 + colWidth, gridY);
     const locationLines = pdf.splitTextToSize(location, colWidth - 5);
-    drawField("WHERE", locationLines, startX + 10 + colWidth, gridY);
-    // SEAT
-    drawField("SEAT", seatInfo, startX + 10 + colWidth * 2, gridY);
+    drawField("LOCATION", locationLines, startX + 10 + colWidth * 2, gridY);
+    // Third Row: Ticket Type, Level (if provided)
+    if (ticketType || level) {
+        gridY += 20;
+        if (ticketType) {
+            drawField("TICKET TYPE", ticketType, startX + 10, gridY);
+        }
+        if (level) {
+            drawField("LEVEL", level, startX + 10 + (ticketType ? colWidth : 0), gridY);
+        }
+    }
     // ATTENDEE
     if (attendeeName) {
-        drawField("ATTENDEE", attendeeName, startX + 10, gridY + 20);
+        gridY += 20;
+        drawField("ATTENDEE", attendeeName, startX + 10, gridY);
     }
     // Footer Text
     pdf.setTextColor(156, 163, 175);
@@ -374,7 +401,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$qrcode$2f$li
 ;
 ;
 const RESEND_API_URL = "https://api.resend.com/emails";
-async function sendTicketEmail(to, ticketPath, event, seatInfo, ticketId) {
+async function sendTicketEmail(to, ticketPath, event, seatInfo, ticketId, row, section) {
     console.log(`Attempting to send email to ${to} for event ${event.title} via Resend API`);
     const apiKey = process.env.RESEND_API_KEY;
     if (!apiKey || apiKey.startsWith("re_...")) {
@@ -434,6 +461,28 @@ async function sendTicketEmail(to, ticketPath, event, seatInfo, ticketId) {
             <tr>
               <td align="center">
                 <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; width: 100%; font-family: sans-serif;">
+                  
+                  <!-- Top Header Text -->
+                  <tr>
+                    <td style="padding-bottom: 20px;">
+                      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                        <tr>
+                          <td align="left">
+                            <h2 style="margin: 0; font-size: 24px; font-weight: 700; color: #111827;">This is your ticket</h2>
+                          </td>
+                          <td align="right">
+                             <!-- Branding / Logo Area -->
+                             <div style="font-size: 14px; font-weight: 600; color: #4b5563; display: flex; align-items: center; justify-content: flex-end;">
+                                <span style="margin-right: 8px;">Google Developer Groups</span>
+                                <!-- Placeholder Logo Icon -->
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1200px-Google_%22G%22_Logo.svg.png" width="20" height="20" alt="Logo" style="vertical-align: middle;" />
+                             </div>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+
                   <tr>
                     <td style="padding: 0;">
                       
@@ -441,72 +490,55 @@ async function sendTicketEmail(to, ticketPath, event, seatInfo, ticketId) {
                       <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
                         <tr>
                           <!-- Left Section (Main Info) -->
-                          <td width="70%" style="padding: 30px; vertical-align: top;">
+                          <td width="65%" style="padding: 30px; vertical-align: top; border-right: 1px dashed #e5e7eb;">
                             
-                            <!-- Header: Initials + Title -->
-                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 30px;">
-                              <tr>
-                                <td width="50" style="vertical-align: middle;">
-                                  <div style="width: 48px; height: 48px; background-color: #2563eb; border-radius: 8px; color: white; font-size: 18px; font-weight: 700; line-height: 48px; text-align: center; font-family: sans-serif;">
-                                    ${initials}
-                                  </div>
-                                </td>
-                                <td style="padding-left: 15px; vertical-align: middle;">
-                                  <h1 style="margin: 0; font-size: 20px; font-weight: 700; color: #111827; line-height: 1.2; text-transform: capitalize;">${event.title}</h1>
-                                </td>
-                              </tr>
-                            </table>
-
-                            <!-- Details Grid -->
-                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                              <tr>
-                                <td style="padding-bottom: 20px; width: 33%; vertical-align: top;">
-                                  <div style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">WHEN</div>
-                                  <div style="font-size: 12px; font-weight: 600; color: #1f2937;">${event.date}</div>
-                                  <div style="font-size: 12px; font-weight: 600; color: #1f2937;">${event.time}</div>
-                                </td>
-                                <td style="padding-bottom: 20px; width: 33%; vertical-align: top;">
-                                  <div style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">WHERE</div>
-                                  <div style="font-size: 12px; font-weight: 600; color: #1f2937;">${event.location}</div>
-                                </td>
-                                <td style="padding-bottom: 20px; width: 33%; vertical-align: top;">
-                                  <div style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">STAT</div>
-                                  <div style="font-size: 12px; font-weight: 600; color: #1f2937;">${seatInfo}</div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td colspan="3" style="vertical-align: top;">
-                                  <div style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">ATTENDEE</div>
-                                  <div style="font-size: 14px; font-weight: 700; color: #1f2937;">${to.split('@')[0]}</div>
-                                  <div style="font-size: 12px; color: #6b7280;">${to}</div>
-                                </td>
-                              </tr>
-                            </table>
-
-                            <div style="margin-top: 25px; font-size: 11px; color: #9ca3af; line-height: 1.4;">
-                              Present this ticket on arrival. This ticket is valid for one entry. For support contact help@eventhub.com
+                            <!-- Event Image / Logo -->
+                            ${event.image ? `
+                            <div style="margin-bottom: 20px;">
+                              <img src="${event.image}" alt="Event Image" style="max-width: 100%; height: auto; max-height: 60px; object-fit: contain; border-radius: 4px;" />
                             </div>
+                            ` : `
+                            <div style="margin-bottom: 20px;">
+                               <div style="width: 40px; height: 40px; background-color: #2563eb; border-radius: 8px; color: white; font-size: 16px; font-weight: 700; line-height: 40px; text-align: center;">${initials}</div>
+                            </div>
+                            `}
+
+                            <!-- Event Details -->
+                            <div style="margin-bottom: 30px;">
+                              ${event.artistName ? `<div style="font-size: 14px; color: #6b7280; margin-bottom: 4px;">${event.artistName}</div>` : ''}
+                              <h1 style="margin: 0 0 10px 0; font-size: 22px; font-weight: 800; color: #111827; line-height: 1.2;">${event.title}</h1>
+                              
+                              <div style="font-size: 12px; color: #4b5563; line-height: 1.5;">
+                                <div style="margin-bottom: 2px;">${event.location}</div>
+                                <div style="font-weight: 700; text-transform: uppercase;">${event.date}, ${event.time}</div>
+                              </div>
+                            </div>
+
+                            <!-- Ticket Footer Details -->
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: auto;">
+                              <tr>
+                                <td style="padding-right: 15px; vertical-align: top;">
+                                  <div style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; margin-bottom: 4px;">ISSUED TO</div>
+                                  <div style="font-size: 12px; font-weight: 600; color: #1f2937;">${to.split('@')[0]}</div>
+                                  <div style="font-size: 10px; color: #6b7280;">${to}</div>
+                                </td>
+                                <td style="padding-right: 15px; vertical-align: top;">
+                                  <div style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; margin-bottom: 4px;">ORDER NUMBER</div>
+                                  <div style="font-size: 12px; font-weight: 600; color: #1f2937;">${ticketId.substring(0, 12)}</div>
+                                </td>
+                                <td style="vertical-align: top;">
+                                  <div style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; margin-bottom: 4px;">TICKET</div>
+                                  <div style="font-size: 12px; font-weight: 600; color: #1f2937;">${event.ticketType || 'General Admission'}</div>
+                                  <div style="font-size: 10px; color: #6b7280;">${seatInfo}</div>
+                                </td>
+                              </tr>
+                            </table>
 
                           </td>
 
-                          <!-- Right Section (QR & Barcode) -->
-                          <td width="30%" style="background-color: #f8fafc; padding: 30px 20px; text-align: center; border-left: 2px dashed #e2e8f0; vertical-align: middle;">
-                            
-                            <div style="font-size: 10px; font-weight: 600; color: #64748b; text-transform: uppercase; margin-bottom: 15px;">GENERAL</div>
-                            
-                            <!-- QR Code -->
-                            <img src="${qrCodeData}" alt="QR Code" width="100" height="100" style="display: block; margin: 0 auto 15px auto; border-radius: 4px; mix-blend-mode: multiply;" />
-                            
-                            <!-- Ticket ID -->
-                            <div style="margin-bottom: 15px;">
-                              <div style="font-size: 9px; font-weight: 700; color: #9ca3af; text-transform: uppercase; margin-bottom: 2px;">TICKET ID</div>
-                              <div style="font-size: 10px; font-family: monospace; color: #475569;">${ticketId}</div>
-                            </div>
-
-                            <!-- Fake Barcode -->
-                            <div style="height: 35px; width: 100%; background-image: repeating-linear-gradient(90deg, #334155 0, #334155 2px, transparent 2px, transparent 4px, #334155 4px, #334155 5px, transparent 5px, transparent 7px); opacity: 0.8;"></div>
-                            <div style="font-size: 8px; color: #9ca3af; margin-top: 4px; letter-spacing: 2px;">${ticketId.substring(0, 12)}</div>
-
+                          <!-- Right Section (QR Code) -->
+                          <td width="35%" style="background-color: white; padding: 30px; text-align: center; vertical-align: middle;">
+                            <img src="${qrCodeData}" alt="QR Code" width="150" height="150" style="display: block; margin: 0 auto; max-width: 100%; height: auto;" />
                           </td>
                         </tr>
                       </table>
@@ -606,7 +638,9 @@ async function POST(request, { params }) {
             ticketId
         });
         const seatInfo = `${seatRow}${seatNum}`;
-        const pdfBuffer = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$pdf$2d$generator$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["generateTicketPDF"])(event.title, seatInfo, event.date, event.time, event.location, ticketId, name);
+        // Cast event to any to bypass stale type definitions for new fields
+        const eventData = event;
+        const pdfBuffer = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$pdf$2d$generator$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["generateTicketPDF"])(eventData.title, seatInfo, eventData.date, eventData.time, eventData.location, ticketId, name, eventData.artistName || undefined, eventData.section || undefined, seatRow, eventData.ticketType || undefined, eventData.level || undefined);
         const ticketDir = __TURBOPACK__imported__module__$5b$externals$5d2f$path__$5b$external$5d$__$28$path$2c$__cjs$29$__["default"].join(process.cwd(), "public", "tickets");
         if (!__TURBOPACK__imported__module__$5b$externals$5d2f$fs__$5b$external$5d$__$28$fs$2c$__cjs$29$__["default"].existsSync(ticketDir)) {
             __TURBOPACK__imported__module__$5b$externals$5d2f$fs__$5b$external$5d$__$28$fs$2c$__cjs$29$__["default"].mkdirSync(ticketDir, {
@@ -618,12 +652,16 @@ async function POST(request, { params }) {
         // Send email
         try {
             await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$email$2e$tsx__$5b$app$2d$route$5d$__$28$ecmascript$29$__["sendTicketEmail"])(email, ticketFilePath, {
+                artistName: event.artistName,
                 title: event.title,
                 date: event.date,
                 time: event.time,
                 location: event.location,
-                image: event.image
-            }, `${seatRow}${seatNum}`, ticketId);
+                image: event.image,
+                section: event.section,
+                ticketType: event.ticketType,
+                level: event.level
+            }, `${seatRow}${seatNum}`, ticketId, seatRow, event.section || undefined);
         } catch (error) {
             console.error("Failed to send email (continuing anyway):", error);
         // We don't fail the request if email fails, as the seat is already claimed

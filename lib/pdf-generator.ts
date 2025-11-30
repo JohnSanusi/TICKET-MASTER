@@ -10,7 +10,13 @@ export async function generateTicketPDF(
   eventTime: string,
   location: string,
   ticketId: string,
-  attendeeName?: string
+  attendeeName?: string,
+  artistName?: string,
+  section?: string,
+  row?: string,
+  ticketType?: string,
+  level?: string,
+  imageUrl?: string
 ): Promise<Buffer> {
   // Generate QR code
   const qrCodeData = await QRCode.toDataURL(ticketId)
@@ -59,16 +65,58 @@ export async function generateTicketPDF(
 
   // --- LEFT SECTION CONTENT ---
 
-  // Initials Box
-  const initials = eventTitle.split(' ').filter(w => w.length > 0).slice(0, 2).map(w => w[0]).join('').toUpperCase() || 'EV'
-  
-  pdf.setFillColor(37, 99, 235) // #2563eb (Blue)
-  pdf.roundedRect(startX + 10, startY + 10, 15, 15, 2, 2, "F")
-  
-  pdf.setTextColor(255, 255, 255)
-  pdf.setFontSize(14)
-  pdf.setFont("helvetica", "bold")
-  pdf.text(initials, startX + 17.5, startY + 19.5, { align: "center" })
+  let titleY = startY + 16
+  let contentStartX = startX + 10
+
+  // Event Image or Initials
+  if (imageUrl) {
+    try {
+      // Fetch image
+      const response = await fetch(imageUrl)
+      if (response.ok) {
+        const imageBuffer = await response.arrayBuffer()
+        const imageData = new Uint8Array(imageBuffer)
+        
+        // Add image to PDF (keep aspect ratio, max height 20mm, max width 20mm)
+        pdf.addImage(imageData, "JPEG", startX + 10, startY + 10, 20, 20)
+        contentStartX += 25 // Shift text to the right
+      } else {
+        throw new Error("Failed to fetch image")
+      }
+    } catch (e) {
+      console.error("Error adding image to PDF, falling back to initials", e)
+      // Fallback to initials
+      const initials = eventTitle.split(' ').filter(w => w.length > 0).slice(0, 2).map(w => w[0]).join('').toUpperCase() || 'EV'
+      pdf.setFillColor(37, 99, 235)
+      pdf.roundedRect(startX + 10, startY + 10, 15, 15, 2, 2, "F")
+      pdf.setTextColor(255, 255, 255)
+      pdf.setFontSize(14)
+      pdf.setFont("helvetica", "bold")
+      pdf.text(initials, startX + 17.5, startY + 19.5, { align: "center" })
+      contentStartX += 25
+    }
+  } else {
+    // Initials Box
+    const initials = eventTitle.split(' ').filter(w => w.length > 0).slice(0, 2).map(w => w[0]).join('').toUpperCase() || 'EV'
+    
+    pdf.setFillColor(37, 99, 235) // #2563eb (Blue)
+    pdf.roundedRect(startX + 10, startY + 10, 15, 15, 2, 2, "F")
+    
+    pdf.setTextColor(255, 255, 255)
+    pdf.setFontSize(14)
+    pdf.setFont("helvetica", "bold")
+    pdf.text(initials, startX + 17.5, startY + 19.5, { align: "center" })
+    contentStartX += 25
+  }
+
+  // Artist Name (if provided)
+  if (artistName) {
+    pdf.setTextColor(107, 114, 128) // #6b7280
+    pdf.setFontSize(11)
+    pdf.setFont("helvetica", "normal")
+    pdf.text(artistName, contentStartX, titleY)
+    titleY += 6
+  }
 
   // Event Title
   pdf.setTextColor(17, 24, 39) // #111827
@@ -77,10 +125,10 @@ export async function generateTicketPDF(
   // Capitalize first letter of each word
   const capitalizedTitle = eventTitle.replace(/\b\w/g, l => l.toUpperCase())
   const titleLines = pdf.splitTextToSize(capitalizedTitle, leftWidth - 40)
-  pdf.text(titleLines, startX + 35, startY + 16)
+  pdf.text(titleLines, contentStartX, titleY)
 
   // Grid Info
-  const gridY = startY + 40
+  let gridY = startY + 40
   const colWidth = (leftWidth - 20) / 3
 
   // Labels style
@@ -104,19 +152,40 @@ export async function generateTicketPDF(
     }
   }
 
-  // WHEN
-  drawField("WHEN", [eventDate, eventTime], startX + 10, gridY)
-  
-  // WHERE
+  // First Row: Section, Row, Seat
+  let fieldX = startX + 10
+  if (section) {
+    drawField("SECTION", section, fieldX, gridY)
+    fieldX += colWidth
+  }
+  if (row) {
+    drawField("ROW", row, fieldX, gridY)
+    fieldX += colWidth
+  }
+  drawField("STAT", seatInfo, fieldX, gridY)
+
+  // Second Row: Date, Time, Location
+  gridY += 20
+  drawField("DATE", eventDate, startX + 10, gridY)
+  drawField("TIME", eventTime, startX + 10 + colWidth, gridY)
   const locationLines = pdf.splitTextToSize(location, colWidth - 5)
-  drawField("WHERE", locationLines, startX + 10 + colWidth, gridY)
-  
-  // SEAT
-  drawField("SEAT", seatInfo, startX + 10 + (colWidth * 2), gridY)
+  drawField("LOCATION", locationLines, startX + 10 + (colWidth * 2), gridY)
+
+  // Third Row: Ticket Type, Level (if provided)
+  if (ticketType || level) {
+    gridY += 20
+    if (ticketType) {
+      drawField("TICKET TYPE", ticketType, startX + 10, gridY)
+    }
+    if (level) {
+      drawField("LEVEL", level, startX + 10 + (ticketType ? colWidth : 0), gridY)
+    }
+  }
 
   // ATTENDEE
   if (attendeeName) {
-    drawField("ATTENDEE", attendeeName, startX + 10, gridY + 20)
+    gridY += 20
+    drawField("ATTENDEE", attendeeName, startX + 10, gridY)
   }
 
   // Footer Text

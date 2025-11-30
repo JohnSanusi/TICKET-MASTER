@@ -18,12 +18,16 @@ export function CreateEventForm() {
   const [loading, setLoading] = useState(false)
   const [hasTimer, setHasTimer] = useState(true) // Always enabled by default
   const [formData, setFormData] = useState({
+    artistName: "",
     title: "",
     description: "",
     location: "",
     date: "",
     time: "",
     image: "",
+    section: "",
+    ticketType: "",
+    level: "",
   })
   const [timerDuration, setTimerDuration] = useState({
     days: 0,
@@ -74,12 +78,16 @@ export function CreateEventForm() {
       }
 
       const eventData = {
+        artistName: formData.artistName,
         title: formData.title,
         description: formData.description,
         location: formData.location,
         date: formData.date, // Display date
         time: formData.time, // Display time
         image: formData.image,
+        section: formData.section,
+        ticketType: formData.ticketType,
+        level: formData.level,
         hasTimer,
         eventDate, // Timer target date
         eventTime, // Timer target time
@@ -111,12 +119,22 @@ export function CreateEventForm() {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="text-sm font-medium">Event Title</label>
+            <label className="text-sm font-medium">Artist Name</label>
+            <Input
+              name="artistName"
+              value={formData.artistName}
+              onChange={handleChange}
+              placeholder="Enter artist/performer name"
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-medium">Event Name</label>
             <Input
               name="title"
               value={formData.title}
               onChange={handleChange}
-              placeholder="Enter event title"
+              placeholder="Enter event name"
               required
             />
           </div>
@@ -142,6 +160,36 @@ export function CreateEventForm() {
               placeholder="Enter event location"
               required
             />
+          </div>
+
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="text-sm font-medium">Section</label>
+              <Input
+                name="section"
+                value={formData.section}
+                onChange={handleChange}
+                placeholder="e.g., VIP, A, B"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Ticket Type</label>
+              <Input
+                name="ticketType"
+                value={formData.ticketType}
+                onChange={handleChange}
+                placeholder="e.g., General, VIP"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Level</label>
+              <Input
+                name="level"
+                value={formData.level}
+                onChange={handleChange}
+                placeholder="e.g., Floor, Balcony"
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">

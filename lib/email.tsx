@@ -5,14 +5,26 @@ import QRCode from "qrcode"
 const RESEND_API_URL = "https://api.resend.com/emails"
 
 interface EventDetails {
+  artistName?: string | null
   title: string
   date: string
   time: string
   location: string
   image?: string | null
+  section?: string | null
+  ticketType?: string | null
+  level?: string | null
 }
 
-export async function sendTicketEmail(to: string, ticketPath: string, event: EventDetails, seatInfo: string, ticketId: string) {
+export async function sendTicketEmail(
+  to: string, 
+  ticketPath: string, 
+  event: EventDetails, 
+  seatInfo: string, 
+  ticketId: string,
+  row?: string,
+  section?: string
+) {
   console.log(`Attempting to send email to ${to} for event ${event.title} via Resend API`)
 
   const apiKey = process.env.RESEND_API_KEY
@@ -76,6 +88,28 @@ export async function sendTicketEmail(to: string, ticketPath: string, event: Eve
             <tr>
               <td align="center">
                 <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; width: 100%; font-family: sans-serif;">
+                  
+                  <!-- Top Header Text -->
+                  <tr>
+                    <td style="padding-bottom: 20px;">
+                      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                        <tr>
+                          <td align="left">
+                            <h2 style="margin: 0; font-size: 24px; font-weight: 700; color: #111827;">This is your ticket</h2>
+                          </td>
+                          <td align="right">
+                             <!-- Branding / Logo Area -->
+                             <div style="font-size: 14px; font-weight: 600; color: #4b5563; display: flex; align-items: center; justify-content: flex-end;">
+                                <span style="margin-right: 8px;">Google Developer Groups</span>
+                                <!-- Placeholder Logo Icon -->
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1200px-Google_%22G%22_Logo.svg.png" width="20" height="20" alt="Logo" style="vertical-align: middle;" />
+                             </div>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+
                   <tr>
                     <td style="padding: 0;">
                       
@@ -83,72 +117,55 @@ export async function sendTicketEmail(to: string, ticketPath: string, event: Eve
                       <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
                         <tr>
                           <!-- Left Section (Main Info) -->
-                          <td width="70%" style="padding: 30px; vertical-align: top;">
+                          <td width="65%" style="padding: 30px; vertical-align: top; border-right: 1px dashed #e5e7eb;">
                             
-                            <!-- Header: Initials + Title -->
-                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 30px;">
-                              <tr>
-                                <td width="50" style="vertical-align: middle;">
-                                  <div style="width: 48px; height: 48px; background-color: #2563eb; border-radius: 8px; color: white; font-size: 18px; font-weight: 700; line-height: 48px; text-align: center; font-family: sans-serif;">
-                                    ${initials}
-                                  </div>
-                                </td>
-                                <td style="padding-left: 15px; vertical-align: middle;">
-                                  <h1 style="margin: 0; font-size: 20px; font-weight: 700; color: #111827; line-height: 1.2; text-transform: capitalize;">${event.title}</h1>
-                                </td>
-                              </tr>
-                            </table>
-
-                            <!-- Details Grid -->
-                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                              <tr>
-                                <td style="padding-bottom: 20px; width: 33%; vertical-align: top;">
-                                  <div style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">WHEN</div>
-                                  <div style="font-size: 12px; font-weight: 600; color: #1f2937;">${event.date}</div>
-                                  <div style="font-size: 12px; font-weight: 600; color: #1f2937;">${event.time}</div>
-                                </td>
-                                <td style="padding-bottom: 20px; width: 33%; vertical-align: top;">
-                                  <div style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">WHERE</div>
-                                  <div style="font-size: 12px; font-weight: 600; color: #1f2937;">${event.location}</div>
-                                </td>
-                                <td style="padding-bottom: 20px; width: 33%; vertical-align: top;">
-                                  <div style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">STAT</div>
-                                  <div style="font-size: 12px; font-weight: 600; color: #1f2937;">${seatInfo}</div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td colspan="3" style="vertical-align: top;">
-                                  <div style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">ATTENDEE</div>
-                                  <div style="font-size: 14px; font-weight: 700; color: #1f2937;">${to.split('@')[0]}</div>
-                                  <div style="font-size: 12px; color: #6b7280;">${to}</div>
-                                </td>
-                              </tr>
-                            </table>
-
-                            <div style="margin-top: 25px; font-size: 11px; color: #9ca3af; line-height: 1.4;">
-                              Present this ticket on arrival. This ticket is valid for one entry. For support contact help@eventhub.com
+                            <!-- Event Image / Logo -->
+                            ${event.image ? `
+                            <div style="margin-bottom: 20px;">
+                              <img src="${event.image}" alt="Event Image" style="max-width: 100%; height: auto; max-height: 60px; object-fit: contain; border-radius: 4px;" />
                             </div>
+                            ` : `
+                            <div style="margin-bottom: 20px;">
+                               <div style="width: 40px; height: 40px; background-color: #2563eb; border-radius: 8px; color: white; font-size: 16px; font-weight: 700; line-height: 40px; text-align: center;">${initials}</div>
+                            </div>
+                            `}
+
+                            <!-- Event Details -->
+                            <div style="margin-bottom: 30px;">
+                              ${event.artistName ? `<div style="font-size: 14px; color: #6b7280; margin-bottom: 4px;">${event.artistName}</div>` : ''}
+                              <h1 style="margin: 0 0 10px 0; font-size: 22px; font-weight: 800; color: #111827; line-height: 1.2;">${event.title}</h1>
+                              
+                              <div style="font-size: 12px; color: #4b5563; line-height: 1.5;">
+                                <div style="margin-bottom: 2px;">${event.location}</div>
+                                <div style="font-weight: 700; text-transform: uppercase;">${event.date}, ${event.time}</div>
+                              </div>
+                            </div>
+
+                            <!-- Ticket Footer Details -->
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: auto;">
+                              <tr>
+                                <td style="padding-right: 15px; vertical-align: top;">
+                                  <div style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; margin-bottom: 4px;">ISSUED TO</div>
+                                  <div style="font-size: 12px; font-weight: 600; color: #1f2937;">${to.split('@')[0]}</div>
+                                  <div style="font-size: 10px; color: #6b7280;">${to}</div>
+                                </td>
+                                <td style="padding-right: 15px; vertical-align: top;">
+                                  <div style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; margin-bottom: 4px;">ORDER NUMBER</div>
+                                  <div style="font-size: 12px; font-weight: 600; color: #1f2937;">${ticketId.substring(0, 12)}</div>
+                                </td>
+                                <td style="vertical-align: top;">
+                                  <div style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; margin-bottom: 4px;">TICKET</div>
+                                  <div style="font-size: 12px; font-weight: 600; color: #1f2937;">${event.ticketType || 'General Admission'}</div>
+                                  <div style="font-size: 10px; color: #6b7280;">${seatInfo}</div>
+                                </td>
+                              </tr>
+                            </table>
 
                           </td>
 
-                          <!-- Right Section (QR & Barcode) -->
-                          <td width="30%" style="background-color: #f8fafc; padding: 30px 20px; text-align: center; border-left: 2px dashed #e2e8f0; vertical-align: middle;">
-                            
-                            <div style="font-size: 10px; font-weight: 600; color: #64748b; text-transform: uppercase; margin-bottom: 15px;">GENERAL</div>
-                            
-                            <!-- QR Code -->
-                            <img src="${qrCodeData}" alt="QR Code" width="100" height="100" style="display: block; margin: 0 auto 15px auto; border-radius: 4px; mix-blend-mode: multiply;" />
-                            
-                            <!-- Ticket ID -->
-                            <div style="margin-bottom: 15px;">
-                              <div style="font-size: 9px; font-weight: 700; color: #9ca3af; text-transform: uppercase; margin-bottom: 2px;">TICKET ID</div>
-                              <div style="font-size: 10px; font-family: monospace; color: #475569;">${ticketId}</div>
-                            </div>
-
-                            <!-- Fake Barcode -->
-                            <div style="height: 35px; width: 100%; background-image: repeating-linear-gradient(90deg, #334155 0, #334155 2px, transparent 2px, transparent 4px, #334155 4px, #334155 5px, transparent 5px, transparent 7px); opacity: 0.8;"></div>
-                            <div style="font-size: 8px; color: #9ca3af; margin-top: 4px; letter-spacing: 2px;">${ticketId.substring(0, 12)}</div>
-
+                          <!-- Right Section (QR Code) -->
+                          <td width="35%" style="background-color: white; padding: 30px; text-align: center; vertical-align: middle;">
+                            <img src="${qrCodeData}" alt="QR Code" width="150" height="150" style="display: block; margin: 0 auto; max-width: 100%; height: auto;" />
                           </td>
                         </tr>
                       </table>

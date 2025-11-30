@@ -150,13 +150,15 @@ function generateDefaultSeatMap() {
 "[project]/app/actions/events.ts [app-rsc] (ecmascript)", ((__turbopack_context__) => {
 "use strict";
 
-/* __next_internal_action_entry_do_not_use__ [{"00d24d28afc19c17b87a20de98d043ab3d7d6347d9":"getAllEvents","403021459a8a60094bbed7ee85bae8e65ea27b85ce":"getEventById","4061e8196633ed9f46baa304943579677933a4a4b1":"createEvent","702d90ba3b8981b5b7456d2a668cc7e0b00ede36af":"addTimerToEvent","7c893b2743482298ce690eaa3c27d77a648b2885fb":"claimSeat"},"",""] */ __turbopack_context__.s([
+/* __next_internal_action_entry_do_not_use__ [{"00d24d28afc19c17b87a20de98d043ab3d7d6347d9":"getAllEvents","401f3521f633135722aa5ed3bf148f0d28b638a84b":"deleteEvent","403021459a8a60094bbed7ee85bae8e65ea27b85ce":"getEventById","4061e8196633ed9f46baa304943579677933a4a4b1":"createEvent","702d90ba3b8981b5b7456d2a668cc7e0b00ede36af":"addTimerToEvent","7c893b2743482298ce690eaa3c27d77a648b2885fb":"claimSeat"},"",""] */ __turbopack_context__.s([
     "addTimerToEvent",
     ()=>addTimerToEvent,
     "claimSeat",
     ()=>claimSeat,
     "createEvent",
     ()=>createEvent,
+    "deleteEvent",
+    ()=>deleteEvent,
     "getAllEvents",
     ()=>getAllEvents,
     "getEventById",
@@ -235,25 +237,46 @@ async function getAllEvents() {
     const events = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2d$adapter$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["db"].event.findManyWithClaims();
     return events;
 }
+async function deleteEvent(eventId) {
+    try {
+        await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2d$adapter$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["db"].event.delete({
+            where: {
+                id: eventId
+            }
+        });
+        return {
+            success: true
+        };
+    } catch (error) {
+        console.error("Failed to delete event:", error);
+        return {
+            success: false,
+            error: "Failed to delete event"
+        };
+    }
+}
 ;
 (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$action$2d$validate$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["ensureServerEntryExports"])([
     createEvent,
     addTimerToEvent,
     claimSeat,
     getEventById,
-    getAllEvents
+    getAllEvents,
+    deleteEvent
 ]);
 (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(createEvent, "4061e8196633ed9f46baa304943579677933a4a4b1", null);
 (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(addTimerToEvent, "702d90ba3b8981b5b7456d2a668cc7e0b00ede36af", null);
 (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(claimSeat, "7c893b2743482298ce690eaa3c27d77a648b2885fb", null);
 (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(getEventById, "403021459a8a60094bbed7ee85bae8e65ea27b85ce", null);
 (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(getAllEvents, "00d24d28afc19c17b87a20de98d043ab3d7d6347d9", null);
+(0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$webpack$2f$loaders$2f$next$2d$flight$2d$loader$2f$server$2d$reference$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["registerServerReference"])(deleteEvent, "401f3521f633135722aa5ed3bf148f0d28b638a84b", null);
 }),
 "[project]/.next-internal/server/app/help/page/actions.js { ACTIONS_MODULE0 => \"[project]/app/actions/events.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript) <locals>", ((__turbopack_context__) => {
 "use strict";
 
 __turbopack_context__.s([]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$actions$2f$events$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/actions/events.ts [app-rsc] (ecmascript)");
+;
 ;
 ;
 ;
@@ -267,6 +290,8 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$actions$2f$events$2e$
 __turbopack_context__.s([
     "00d24d28afc19c17b87a20de98d043ab3d7d6347d9",
     ()=>__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$actions$2f$events$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["getAllEvents"],
+    "401f3521f633135722aa5ed3bf148f0d28b638a84b",
+    ()=>__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$actions$2f$events$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["deleteEvent"],
     "403021459a8a60094bbed7ee85bae8e65ea27b85ce",
     ()=>__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$actions$2f$events$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["getEventById"],
     "4061e8196633ed9f46baa304943579677933a4a4b1",

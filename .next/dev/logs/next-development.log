@@ -1,11 +1,21 @@
-[00:00:15.366] Server  LOG      ✓ Ready in 10.8s
-[00:00:20.003] Server  LOG      ○ Compiling /event/[id] ...
-[00:01:07.139] Server  LOG      ○ Compiling /api/events/[id] ...
-[00:01:16.032] Browser WARN    Image with src "/uploads/1764504114861_Screenshot_from_2025-11-11_20-47-27.png" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+[00:00:18.789] Server  LOG      ✓ Ready in 14.2s
+[00:00:41.582] Server  LOG      ○ Compiling / ...
+[00:01:28.694] Browser WARN    Image with src "/uploads/1764504114861_Screenshot_from_2025-11-11_20-47-27.png" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
 Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
-[00:02:10.590] Server  LOG      ○ Compiling /api/events/[id]/claim-seat ...
-[00:02:25.160] Server  LOG     Attempting to send email to johnsanusi8@gmail.com for event tech event via Resend API
-[00:02:31.829] Server  ERROR   Resend API Error: {}
-[00:02:32.999] Server  ERROR   Failed to send email: Error: Resend API responded with 403: {"statusCode":403,"name":"validation_error","message":"You can only send testing emails to your own email address (johnsanusi18@gmail.com). To send emails to other recipients, please verify a domain at resend.com/domains, and change the `from` address to an email using this domain."}
-[00:03:50.667] Server  LOG     Attempting to send email to johnsanusi18@gmail.com for event tech event via Resend API
-[00:03:52.559] Server  LOG     Email sent successfully via Resend: "4fb01d75-db04-4740-a945-2525c9543e42"
+[00:01:41.102] Server  LOG      ○ Compiling /event/[id] ...
+[00:02:00.102] Server  LOG      ○ Compiling /api/events/[id] ...
+[00:02:23.319] Server  LOG      ○ Compiling /help ...
+[00:03:31.643] Browser LOG     [Upload] Starting upload for: Screenshot from 2025-11-14 14-44-56.png
+[00:03:33.724] Browser LOG     [Upload] Response status: 200
+[00:03:33.726] Browser LOG     [Upload] Upload successful: {"success":true,"url":"/uploads/1764523859717_Screenshot_from_2025-11-14_14-44-56.png"}
+[00:03:36.112] Browser LOG     [Form] Submit button clicked
+[00:03:36.113] Browser LOG     [Form] Calculating timer duration: {"days":3,"hours":20,"minutes":54,"seconds":5}
+[00:03:36.113] Browser LOG     [Form] Timer target: {"eventDate":"2025-12-04","eventTime":"15:25"}
+[00:03:36.113] Browser LOG     [Form] Calling createEvent with: {"artistName":"drKE","date":"2025-11-29","description":"kjkfjknfjknfdjkndfjnk","eventDate":"2025-12-04","eventTime":"15:25","hasTimer":true,"image":"/uploads/1764523859717_Screenshot_from_2025-11-14_14-44-56.png","level":"jksdjksdjk","location":"jjkjkfjk","section":"jkdjk","ticketType":"jkfjdfjknf","time":"19:31","title":"hhjbfhjbdfs"}
+[00:03:36.204] Server  LOG     [Server Action] Creating event with data: {}
+[00:03:36.479] Server  LOG     [Server Action] Event created successfully: {}
+[00:03:36.877] Browser LOG     [Form] Event created successfully: {"createdAt":"2025-11-30T17:31:03.036Z","date":"2025-11-29","description":"kjkfjknfjknfdjkndfjnk","eventDate":"2025-12-04","eventTime":"15:25","hasTimer":true,"id":"cmilzy6f000003y54ck50zyp1","image":"/uploads/1764523859717_Screenshot_from_2025-11-14_14-44-56.png","location":"jjkjkfjk","seatMap":"[{\"row\":\"A\",\"num\":1,\"available\":true},{\"row\":\"A\",\"num\":2,\"available\":true},{\"row\":\"A\",\"num\":3,\"available\":true},{\"row\":\"A\",\"num\":4,\"available\":true},{\"row\":\"A\",\"num\":5,\"available\":true},{\"row\":\"A\",\"num\":6,\"available\":true},{\"row\":\"A\",\"num\":7,\"available\":true},{\"row\":\"A\",\"num\":8,\"available\":true},{\"row\":\"A\",\"num\":9,\"available\":true},{\"row\":\"A\",\"num\":10,\"available\":true},{\"row\":\"B\",\"num\":1,\"available\":true},{\"row\":\"B\",\"num\":2,\"available\":true},{\"row\":\"B\",\"num\":3,\"available\":true},{\"row\":\"B\",\"num\":4,\"available\":true},{\"row\":\"B\",\"num\":5,\"available\":true},{\"row\":\"B\",\"num\":6,\"available\":true},{\"row\":\"B\",\"num\":7,\"available\":true},{\"row\":\"B\",\"num\":8,\"available\":true},{\"row\":\"B\",\"num\":9,\"available\":true},{\"row\":\"B\",\"num\":10,\"available\":true},{\"row\":\"C\",\"num\":1,\"available\":true},{\"row\":\"C\",\"num\":2,\"available\":true},{\"row\":\"C\",\"num\":3,\"available\":true},{\"row\":\"C\",\"num\":4,\"available\":true},{\"row\":\"C\",\"num\":5,\"available\":true},{\"row\":\"C\",\"num\":6,\"available\":true},{\"row\":\"C\",\"num\":7,\"available\":true},{\"row\":\"C\",\"num\":8,\"available\":true},{\"row\":\"C\",\"num\":9,\"available\":true},{\"row\":\"C\",\"num\":10,\"available\":true},{\"row\":\"D\",\"num\":1,\"available\":true},{\"row\":\"D\",\"num\":2,\"available\":true},{\"row\":\"D\",\"num\":3,\"available\":true},{\"row\":\"D\",\"num\":4,\"available\":true},{\"row\":\"D\",\"num\":5,\"available\":true},{\"row\":\"D\",\"num\":6,\"available\":true},{\"row\":\"D\",\"num\":7,\"available\":true},{\"row\":\"D\",\"num\":8,\"available\":true},{\"row\":\"D\",\"num\":9,\"available\":true},{\"row\":\"D\",\"num\":10,\"available\":true},{\"row\":\"E\",\"num\":1,\"available\":true},{\"row\":\"E\",\"num\":2,\"available\":true},{\"row\":\"E\",\"num\":3,\"available\":true},{\"row\":\"E\",\"num\":4,\"available\":true},{\"row\":\"E\",\"num\":5,\"available\":true},{\"row\":\"E\",\"num\":6,\"available\":true},{\"row\":\"E\",\"num\":7,\"available\":true},{\"row\":\"E\",\"num\":8,\"available\":true},{\"row\":\"E\",\"num\":9,\"available\":true},{\"row\":\"E\",\"num\":10,\"available\":true}]","time":"19:31","title":"hhjbfhjbdfs","updatedAt":"2025-11-30T17:31:03.036Z"}
+[00:03:36.878] Browser LOG     [Form] Navigating to: /event/cmilzy6f000003y54ck50zyp1
+[00:04:20.493] Server  LOG      ○ Compiling /api/events/[id]/claim-seat ...
+[00:04:37.331] Server  LOG     Attempting to send email to johnsanusi18@gmail.com for event hhjbfhjbdfs via Resend API
+[00:04:39.161] Server  LOG     Email sent successfully via Resend: "8efe5958-4ed2-4db0-a451-b1669482646b"

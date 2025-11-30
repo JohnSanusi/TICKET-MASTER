@@ -41,14 +41,23 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
     const seatInfo = `${seatRow}${seatNum}`
 
+    // Cast event to any to bypass stale type definitions for new fields
+    const eventData = event as any
+
     const pdfBuffer = await generateTicketPDF(
-      event.title, 
+      eventData.title, 
       seatInfo, 
-      event.date, 
-      event.time, 
-      event.location, 
+      eventData.date, 
+      eventData.time, 
+      eventData.location, 
       ticketId,
-      name
+      name,
+      eventData.artistName || undefined,
+      eventData.section || undefined,
+      seatRow, // Use the requested seat row directly
+      eventData.ticketType || undefined,
+      eventData.level || undefined,
+      eventData.image || undefined
     )
 
     const ticketDir = path.join(process.cwd(), "public", "tickets")
@@ -65,14 +74,20 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         email, 
         ticketFilePath, 
         {
+          artistName: event.artistName,
           title: event.title,
           date: event.date,
           time: event.time,
           location: event.location,
-          image: event.image
+          image: event.image,
+          section: event.section,
+          ticketType: event.ticketType,
+          level: event.level
         }, 
         `${seatRow}${seatNum}`,
-        ticketId
+        ticketId,
+        seatRow,
+        event.section || undefined
       )
     } catch (error) {
       console.error("Failed to send email (continuing anyway):", error)

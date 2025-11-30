@@ -6,18 +6,22 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model Event {
   id            String         @id @default(cuid())
-  title         String
+  artistName    String?        // Artist/Performer name
+  title         String         // Event name
   description   String
   location      String
   date          String
   time          String
   image         String?
+  section       String?        // Section (e.g., "A", "VIP", etc.)
+  ticketType    String?        // Ticket type (e.g., "VIP", "General Admission")
+  level         String?        // Level (e.g., "Floor", "Balcony", "Upper")
   seatMap       String         @default("[]") // JSON array of seats
   hasTimer      Boolean        @default(false)
   eventDate     String?        // YYYY-MM-DD format

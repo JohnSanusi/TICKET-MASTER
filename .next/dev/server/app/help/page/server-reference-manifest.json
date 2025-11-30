@@ -15,6 +15,21 @@
       "exportedName": "getAllEvents",
       "filename": "app/actions/events.ts"
     },
+    "401f3521f633135722aa5ed3bf148f0d28b638a84b": {
+      "workers": {
+        "app/help/page": {
+          "moduleId": "[project]/.next-internal/server/app/help/page/actions.js { ACTIONS_MODULE0 => \"[project]/app/actions/events.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
+          "async": false,
+          "exportedName": "deleteEvent",
+          "filename": "app/actions/events.ts"
+        }
+      },
+      "layer": {
+        "app/help/page": "rsc"
+      },
+      "exportedName": "deleteEvent",
+      "filename": "app/actions/events.ts"
+    },
     "403021459a8a60094bbed7ee85bae8e65ea27b85ce": {
       "workers": {
         "app/help/page": {
