@@ -43,24 +43,24 @@ export function SeatMap({ eventId, claimedSeats, onSelectSeat, seatMap }: SeatMa
   }
 
   return (
-    <div className="w-full bg-card rounded-lg p-6">
-      <h3 className="text-lg font-semibold mb-4 text-center">Select Your Seat</h3>
+    <div className="w-full bg-card rounded-lg p-3 md:p-6">
+      <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 text-center">Select Your Seat</h3>
 
       {/* Screen representation */}
-      <div className="mb-8 text-center">
-        <div className="inline-block bg-primary text-primary-foreground px-8 py-2 rounded font-semibold">SCREEN</div>
+      <div className="mb-4 md:mb-8 text-center">
+        <div className="inline-block bg-primary text-primary-foreground px-6 md:px-8 py-1.5 md:py-2 rounded text-sm md:text-base font-semibold">SCREEN</div>
       </div>
 
       {/* Seat grid */}
-      <div className="flex flex-col gap-3 items-center">
+      <div className="flex flex-col gap-1.5 md:gap-3 items-center">
         {ROWS.map((row) => {
           const seatsInRow = seatsByRow[row] || []
           if (seatsInRow.length === 0) return null
 
           return (
-            <div key={row} className="flex gap-2 items-center">
-              <span className="w-8 font-semibold text-right">{row}</span>
-              <div className="flex gap-1">
+            <div key={row} className="flex gap-1 md:gap-2 items-center">
+              <span className="w-4 md:w-8 text-xs md:text-base font-semibold text-right">{row}</span>
+              <div className="flex gap-0.5 md:gap-1 flex-wrap justify-center">
                 {seatsInRow.map((seatNum) => {
                 const seatKey = `${row}-${seatNum}`
                 const isClaimed = claimedSet.has(seatKey)
@@ -71,7 +71,7 @@ export function SeatMap({ eventId, claimedSeats, onSelectSeat, seatMap }: SeatMa
                     key={seatKey}
                     onClick={() => handleSeatClick(row, seatNum)}
                     disabled={isClaimed}
-                    className={`w-8 h-8 rounded text-xs font-semibold transition-all ${
+                    className={`w-6 h-6 md:w-8 md:h-8 rounded text-[10px] md:text-xs font-semibold transition-all ${
                       isClaimed
                         ? "bg-gray-400 cursor-not-allowed text-gray-600"
                         : isSelected
@@ -84,14 +84,14 @@ export function SeatMap({ eventId, claimedSeats, onSelectSeat, seatMap }: SeatMa
                   </button>
                 )
               })}
+              </div>
             </div>
-          </div>
           )
         })}
       </div>
 
       {/* Legend */}
-      <div className="flex gap-6 justify-center mt-8 text-sm">
+      <div className="flex gap-3 md:gap-6 justify-center mt-4 md:mt-8 text-xs md:text-sm">
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 bg-border rounded"></div>
           <span>Available</span>
