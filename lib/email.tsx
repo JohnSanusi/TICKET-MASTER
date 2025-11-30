@@ -23,7 +23,7 @@ export async function sendTicketEmail(to: string, ticketPath: string, event: Eve
       [MOCK EMAIL]
       To: ${to}
       Subject: Your Ticket for ${event.title}
-      Seat: ${seatInfo}
+      Stat: ${seatInfo}
       Ticket Path: ${ticketPath}
       Event: ${event.title}
       Date: ${event.date} at ${event.time}
@@ -61,13 +61,13 @@ export async function sendTicketEmail(to: string, ticketPath: string, event: Eve
 
     // Construct the sender address
     const senderEmail = process.env.SENDER_EMAIL || "onboarding@resend.dev"
-    const senderName = process.env.SENDER_NAME || "Ticketmaster"
+    const senderName = process.env.SENDER_NAME || "TICKETMASTER"
     const from = `${senderName} <${senderEmail}>`
 
     const body = {
       from,
       to: [to],
-      subject: `🎟️ ${event.title} - Seat ${seatInfo}`,
+      subject: `🎟️ ${event.title} - Stat ${seatInfo}`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -112,7 +112,7 @@ export async function sendTicketEmail(to: string, ticketPath: string, event: Eve
                                   <div style="font-size: 12px; font-weight: 600; color: #1f2937;">${event.location}</div>
                                 </td>
                                 <td style="padding-bottom: 20px; width: 33%; vertical-align: top;">
-                                  <div style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">SEAT</div>
+                                  <div style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">STAT</div>
                                   <div style="font-size: 12px; font-weight: 600; color: #1f2937;">${seatInfo}</div>
                                 </td>
                               </tr>

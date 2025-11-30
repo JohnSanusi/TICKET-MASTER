@@ -1,9 +1,11 @@
-[00:00:20.802] Server  LOG      ✓ Ready in 12.9s
-[00:00:23.941] Server  LOG      ○ Compiling /event/[id] ...
-[00:01:08.188] Server  LOG      ○ Compiling /api/events/[id] ...
-[00:03:03.914] Server  LOG      ○ Compiling /api/events/[id]/claim-seat ...
-[00:03:20.568] Server  LOG     Attempting to send email to johnsanusi18@gmail.com for event tech event via Resend API
-[00:03:23.882] Server  LOG     Email sent successfully via Resend: "8758cc19-447c-4285-9fc3-16821576f6db"
-[00:08:23.080] Server  LOG     Attempting to send email to johnsanusi18@gmail.com for event tech event via Resend API
-[00:08:24.752] Server  LOG     Email sent successfully via Resend: "dc4885e8-e874-4534-a181-b0417169bdcb"
-[00:13:38.704] Server  LOG      ✓ Compiled in 1589ms
+[00:00:15.366] Server  LOG      ✓ Ready in 10.8s
+[00:00:20.003] Server  LOG      ○ Compiling /event/[id] ...
+[00:01:07.139] Server  LOG      ○ Compiling /api/events/[id] ...
+[00:01:16.032] Browser WARN    Image with src "/uploads/1764504114861_Screenshot_from_2025-11-11_20-47-27.png" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+[00:02:10.590] Server  LOG      ○ Compiling /api/events/[id]/claim-seat ...
+[00:02:25.160] Server  LOG     Attempting to send email to johnsanusi8@gmail.com for event tech event via Resend API
+[00:02:31.829] Server  ERROR   Resend API Error: {}
+[00:02:32.999] Server  ERROR   Failed to send email: Error: Resend API responded with 403: {"statusCode":403,"name":"validation_error","message":"You can only send testing emails to your own email address (johnsanusi18@gmail.com). To send emails to other recipients, please verify a domain at resend.com/domains, and change the `from` address to an email using this domain."}
+[00:03:50.667] Server  LOG     Attempting to send email to johnsanusi18@gmail.com for event tech event via Resend API
+[00:03:52.559] Server  LOG     Email sent successfully via Resend: "4fb01d75-db04-4740-a945-2525c9543e42"

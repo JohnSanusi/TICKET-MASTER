@@ -264,7 +264,9 @@ async function generateTicketPDF(eventTitle, seatInfo, eventDate, eventTime, loc
     pdf.setTextColor(17, 24, 39); // #111827
     pdf.setFontSize(16);
     pdf.setFont("helvetica", "bold");
-    const titleLines = pdf.splitTextToSize(eventTitle, leftWidth - 40);
+    // Capitalize first letter of each word
+    const capitalizedTitle = eventTitle.replace(/\b\w/g, (l)=>l.toUpperCase());
+    const titleLines = pdf.splitTextToSize(capitalizedTitle, leftWidth - 40);
     pdf.text(titleLines, startX + 35, startY + 16);
     // Grid Info
     const gridY = startY + 40;
@@ -381,7 +383,7 @@ async function sendTicketEmail(to, ticketPath, event, seatInfo, ticketId) {
       [MOCK EMAIL]
       To: ${to}
       Subject: Your Ticket for ${event.title}
-      Seat: ${seatInfo}
+      Stat: ${seatInfo}
       Ticket Path: ${ticketPath}
       Event: ${event.title}
       Date: ${event.date} at ${event.time}
@@ -416,14 +418,14 @@ async function sendTicketEmail(to, ticketPath, event, seatInfo, ticketId) {
         const initials = getInitials(event.title);
         // Construct the sender address
         const senderEmail = process.env.SENDER_EMAIL || "onboarding@resend.dev";
-        const senderName = process.env.SENDER_NAME || "Ticketmaster";
+        const senderName = process.env.SENDER_NAME || "TICKETMASTER";
         const from = `${senderName} <${senderEmail}>`;
         const body = {
             from,
             to: [
                 to
             ],
-            subject: `🎟️ ${event.title} - Seat ${seatInfo}`,
+            subject: `🎟️ ${event.title} - Stat ${seatInfo}`,
             html: `
         <!DOCTYPE html>
         <html>
@@ -450,7 +452,7 @@ async function sendTicketEmail(to, ticketPath, event, seatInfo, ticketId) {
                                   </div>
                                 </td>
                                 <td style="padding-left: 15px; vertical-align: middle;">
-                                  <h1 style="margin: 0; font-size: 20px; font-weight: 700; color: #111827; line-height: 1.2;">${event.title}</h1>
+                                  <h1 style="margin: 0; font-size: 20px; font-weight: 700; color: #111827; line-height: 1.2; text-transform: capitalize;">${event.title}</h1>
                                 </td>
                               </tr>
                             </table>
@@ -468,7 +470,7 @@ async function sendTicketEmail(to, ticketPath, event, seatInfo, ticketId) {
                                   <div style="font-size: 12px; font-weight: 600; color: #1f2937;">${event.location}</div>
                                 </td>
                                 <td style="padding-bottom: 20px; width: 33%; vertical-align: top;">
-                                  <div style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">SEAT</div>
+                                  <div style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">STAT</div>
                                   <div style="font-size: 12px; font-weight: 600; color: #1f2937;">${seatInfo}</div>
                                 </td>
                               </tr>
