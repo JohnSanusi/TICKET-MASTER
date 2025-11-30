@@ -29,16 +29,25 @@
 4. Make it **Public**.
 5. Click **"Save"**.
 
-## 4. Configure Vercel Environment Variables
+### Local Setup
+Update your `.env` file:
+```bash
+DATABASE_URL="your-supabase-connection-string"
+```
 
-Add these variables in Vercel Project Settings -> Environment Variables:
+Then push your schema:
+```bash
+npm run db:push
+```
 
-- `DATABASE_URL`: Your Supabase connection string (from Step 2).
-- `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase Project URL (Settings -> API).
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase Anon Key (Settings -> API).
+### Vercel Setup
+1. Go to your Vercel Project Settings -> **Environment Variables**.
+2. Add/Update `DATABASE_URL` with your Supabase connection string.
+3. Redeploy your project.
 
 ## 5. Verify Build Command
 Ensure your Vercel **Build Command** (in Settings -> General) is:
 ```bash
-prisma db push --accept-data-loss && npm run build
+npm run build
 ```
+(You should run `npm run db:push` locally to update the database schema).

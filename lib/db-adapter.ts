@@ -1,56 +1,73 @@
-import { PrismaClient } from "@prisma/client"
-
-const prismaClientSingleton = () => {
-  return new PrismaClient()
-}
-
-declare global {
-  var prisma: undefined | ReturnType<typeof prismaClientSingleton>
-}
-
-const prisma = globalThis.prisma ?? prismaClientSingleton()
-
-if (process.env.NODE_ENV !== "production") globalThis.prisma = prisma
+import { dbClient } from "./db"
+import { events, claimedSeats, seats } from "./schema"
+import { eq, desc, and } from "drizzle-orm"
 
 export const db = {
   event: {
     create: async (data: any) => {
-      return prisma.event.create({ data })
+      const [result] = await dbClient.insert(events).values(data).returning()
+      return result
     },
     findUnique: async (where: { id: string }) => {
-      return prisma.event.findUnique({ where })
+      return dbClient.query.events.findFirst({
+        where: eq(events.id, where.id),
+      })
     },
     findMany: async (options?: any) => {
-      return prisma.event.findMany({
-        orderBy: { createdAt: 'desc' },
-        ...options
+      // Drizzle doesn't support generic "options" object like Prisma directly
+      // We'll implement basic ordering
+      return dbClient.query.events.findMany({
+        orderBy: [desc(events.createdAt)],
       })
     },
     update: async (params: { where: { id: string }; data: any }) => {
-      return prisma.event.update({
-        where: params.where,
-        data: params.data,
-      })
+      const [result] = await dbClient
+        .update(events)
+        .set(params.data)
+        .where(eq(events.id, params.where.id))
+        .returning()
+      return result
+    },
+    delete: async (where: { id: string }) => {
+      const [result] = await dbClient
+        .delete(events)
+        .where(eq(events.id, where.id))
+        .returning()
+      return result
     },
     findUniqueWithClaims: async (where: { id: string }) => {
-      return prisma.event.findUnique({
-        where,
-        include: { claimedSeats: true },
+      return dbClient.query.events.findFirst({
+        where: eq(events.id, where.id),
+        with: {
+          claimedSeats: true,
+          seats: true, // Also include seats if needed
+        },
       })
     },
     findManyWithClaims: async () => {
-      return prisma.event.findMany({
-        include: { claimedSeats: true },
-        orderBy: { createdAt: 'desc' },
+      return dbClient.query.events.findMany({
+        orderBy: [desc(events.createdAt)],
+        with: {
+          claimedSeats: true,
+        },
       })
     },
   },
   claimedSeat: {
     create: async (data: any) => {
-      return prisma.claimedSeat.create({ data })
+      const [result] = await dbClient.insert(claimedSeats).values(data).returning()
+      return result
     },
     findFirst: async (where: any) => {
-      return prisma.claimedSeat.findFirst({ where })
+      // Construct where clause dynamically
+      const conditions = []
+      if (where.eventId) conditions.push(eq(claimedSeats.eventId, where.eventId))
+      if (where.seatRow) conditions.push(eq(claimedSeats.seatRow, where.seatRow))
+      if (where.seatNum) conditions.push(eq(claimedSeats.seatNum, where.seatNum))
+      
+      return dbClient.query.claimedSeats.findFirst({
+        where: and(...conditions),
+      })
     },
   },
 }
