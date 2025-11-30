@@ -86,7 +86,8 @@ export function SeatMap({ eventId, claimedSeats, onSelectSeat, seatMap }: SeatMa
               })}
             </div>
           </div>
-        ))}
+          )
+        })}
       </div>
 
       {/* Legend */}
