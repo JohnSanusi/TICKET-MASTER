@@ -1,0 +1,13 @@
+var R=require("../../../../../chunks/[turbopack]_runtime.js")("server/app/api/events/[id]/claim-seat/route.js")
+R.c("server/chunks/node_modules_next_60105eae._.js")
+R.c("server/chunks/node_modules_@prisma_client_40ab084c._.js")
+R.c("server/chunks/node_modules_html2canvas_dist_html2canvas_esm_178f5bb6.js")
+R.c("server/chunks/node_modules_core-js_39ccef3f._.js")
+R.c("server/chunks/node_modules_canvg_lib_index_cjs_84557b9a._.js")
+R.c("server/chunks/6b4ca_pako_dist_pako_esm_mjs_f2f37c92._.js")
+R.c("server/chunks/node_modules_jspdf_dist_jspdf_node_min_2f7aa471.js")
+R.c("server/chunks/node_modules_492fb8de._.js")
+R.c("server/chunks/[root-of-the-server]__bf1ee302._.js")
+R.c("server/chunks/_next-internal_server_app_api_events_[id]_claim-seat_route_actions_e9de7078.js")
+R.m("[project]/node_modules/next/dist/esm/build/templates/app-route.js { INNER_APP_ROUTE => \"[project]/app/api/events/[id]/claim-seat/route.ts [app-route] (ecmascript)\" } [app-route] (ecmascript)")
+module.exports=R.m("[project]/node_modules/next/dist/esm/build/templates/app-route.js { INNER_APP_ROUTE => \"[project]/app/api/events/[id]/claim-seat/route.ts [app-route] (ecmascript)\" } [app-route] (ecmascript)").exports

@@ -1,0 +1,116 @@
+{
+  "node": {
+    "00cca0bed949ff7093ff3c5fde4d3d82cdbd5c3f65": {
+      "workers": {
+        "app/help/page": {
+          "moduleId": 58468,
+          "async": false,
+          "exportedName": "getAllEvents",
+          "filename": "app/actions/events.ts"
+        },
+        "app/page": {
+          "moduleId": 91222,
+          "async": false,
+          "exportedName": "getAllEvents",
+          "filename": "app/actions/events.ts"
+        }
+      },
+      "layer": {
+        "app/help/page": "rsc",
+        "app/page": "rsc"
+      },
+      "filename": "app/actions/events.ts",
+      "exportedName": "getAllEvents"
+    },
+    "401b73206a0ddefb89029d23d1c0932daaa79ce402": {
+      "workers": {
+        "app/help/page": {
+          "moduleId": 58468,
+          "async": false,
+          "exportedName": "createEvent",
+          "filename": "app/actions/events.ts"
+        },
+        "app/page": {
+          "moduleId": 91222,
+          "async": false,
+          "exportedName": "createEvent",
+          "filename": "app/actions/events.ts"
+        }
+      },
+      "layer": {
+        "app/help/page": "action-browser",
+        "app/page": "rsc"
+      },
+      "filename": "app/actions/events.ts",
+      "exportedName": "createEvent"
+    },
+    "40bda02e207a1fccc9b21becabb299ff49ed9f3710": {
+      "workers": {
+        "app/help/page": {
+          "moduleId": 58468,
+          "async": false,
+          "exportedName": "getEventById",
+          "filename": "app/actions/events.ts"
+        },
+        "app/page": {
+          "moduleId": 91222,
+          "async": false,
+          "exportedName": "getEventById",
+          "filename": "app/actions/events.ts"
+        }
+      },
+      "layer": {
+        "app/help/page": "rsc",
+        "app/page": "rsc"
+      },
+      "filename": "app/actions/events.ts",
+      "exportedName": "getEventById"
+    },
+    "70b65ae6490ce549e9724b966089305ab0c0c18c8a": {
+      "workers": {
+        "app/help/page": {
+          "moduleId": 58468,
+          "async": false,
+          "exportedName": "addTimerToEvent",
+          "filename": "app/actions/events.ts"
+        },
+        "app/page": {
+          "moduleId": 91222,
+          "async": false,
+          "exportedName": "addTimerToEvent",
+          "filename": "app/actions/events.ts"
+        }
+      },
+      "layer": {
+        "app/help/page": "rsc",
+        "app/page": "rsc"
+      },
+      "filename": "app/actions/events.ts",
+      "exportedName": "addTimerToEvent"
+    },
+    "7c9c2929a3363c902ba8f99630ed9f11bc08ef4060": {
+      "workers": {
+        "app/help/page": {
+          "moduleId": 58468,
+          "async": false,
+          "exportedName": "claimSeat",
+          "filename": "app/actions/events.ts"
+        },
+        "app/page": {
+          "moduleId": 91222,
+          "async": false,
+          "exportedName": "claimSeat",
+          "filename": "app/actions/events.ts"
+        }
+      },
+      "layer": {
+        "app/help/page": "rsc",
+        "app/page": "rsc"
+      },
+      "filename": "app/actions/events.ts",
+      "exportedName": "claimSeat"
+    }
+  },
+  "edge": {},
+  "encryptionKey": "yhA1igJcNkGZuy1kkWe9+nJ/0nGm0UGYqpn/X4HDA2Y="
+}

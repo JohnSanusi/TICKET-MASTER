@@ -1,0 +1,12 @@
+{
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/events/[id]/claim-seat/route": "app/api/events/[id]/claim-seat/route.js",
+  "/api/events/[id]/route": "app/api/events/[id]/route.js",
+  "/api/events/route": "app/api/events/route.js",
+  "/api/upload/route": "app/api/upload/route.js",
+  "/event/[id]/page": "app/event/[id]/page.js",
+  "/help/[id]/page": "app/help/[id]/page.js",
+  "/help/page": "app/help/page.js",
+  "/page": "app/page.js"
+}

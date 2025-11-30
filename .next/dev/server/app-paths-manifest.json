@@ -1,0 +1,6 @@
+{
+  "/api/events/[id]/claim-seat/route": "app/api/events/[id]/claim-seat/route.js",
+  "/api/events/[id]/route": "app/api/events/[id]/route.js",
+  "/event/[id]/page": "app/event/[id]/page.js",
+  "/page": "app/page.js"
+}

@@ -1,0 +1,9 @@
+[00:00:20.802] Server  LOG      ✓ Ready in 12.9s
+[00:00:23.941] Server  LOG      ○ Compiling /event/[id] ...
+[00:01:08.188] Server  LOG      ○ Compiling /api/events/[id] ...
+[00:03:03.914] Server  LOG      ○ Compiling /api/events/[id]/claim-seat ...
+[00:03:20.568] Server  LOG     Attempting to send email to johnsanusi18@gmail.com for event tech event via Resend API
+[00:03:23.882] Server  LOG     Email sent successfully via Resend: "8758cc19-447c-4285-9fc3-16821576f6db"
+[00:08:23.080] Server  LOG     Attempting to send email to johnsanusi18@gmail.com for event tech event via Resend API
+[00:08:24.752] Server  LOG     Email sent successfully via Resend: "dc4885e8-e874-4534-a181-b0417169bdcb"
+[00:13:38.704] Server  LOG      ✓ Compiled in 1589ms

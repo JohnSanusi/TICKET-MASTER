@@ -1,0 +1,12 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/api/events/[id]/claim-seat/route": "/api/events/[id]/claim-seat",
+  "/api/events/[id]/route": "/api/events/[id]",
+  "/api/events/route": "/api/events",
+  "/api/upload/route": "/api/upload",
+  "/event/[id]/page": "/event/[id]",
+  "/help/[id]/page": "/help/[id]",
+  "/help/page": "/help",
+  "/page": "/"
+}
