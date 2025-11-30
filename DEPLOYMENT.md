@@ -1,7 +1,5 @@
 # Deployment Guide: Using Supabase
 
-Since you want to avoid Neon, **Supabase** is the best alternative. It provides a hosted PostgreSQL database that works perfectly with Vercel.
-
 ## 1. Create Supabase Database
 
 1. Go to [supabase.com](https://supabase.com) and sign up.
@@ -23,26 +21,24 @@ Since you want to avoid Neon, **Supabase** is the best alternative. It provides 
 
 5. Replace `[password]` with the password you created in step 1.
 
-## 3. Configure Your Project
+## 3. Configure Storage (Required for Images)
 
-### Local Setup
-Update your `.env` file:
-```bash
-DATABASE_URL="your-supabase-connection-string"
-```
+1. Go to your Supabase project dashboard -> **Storage**.
+2. Click **"New Bucket"**.
+3. Name it `events`.
+4. Make it **Public**.
+5. Click **"Save"**.
 
-Then push your schema:
-```bash
-npx prisma db push
-```
+## 4. Configure Vercel Environment Variables
 
-### Vercel Setup
-1. Go to your Vercel Project Settings -> **Environment Variables**.
-2. Add/Update `DATABASE_URL` with your Supabase connection string.
-3. Redeploy your project (or push a new commit).
+Add these variables in Vercel Project Settings -> Environment Variables:
 
-## 4. Verify Build Command
-Ensure your Vercel **Build Command** (in Settings -> General) is still:
+- `DATABASE_URL`: Your Supabase connection string (from Step 2).
+- `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase Project URL (Settings -> API).
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase Anon Key (Settings -> API).
+
+## 5. Verify Build Command
+Ensure your Vercel **Build Command** (in Settings -> General) is:
 ```bash
 prisma db push --accept-data-loss && npm run build
 ```

@@ -3,6 +3,7 @@ import { Navbar } from "@/components/navbar"
 import { EventCard } from "@/components/event-card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { MapPin, Calendar } from "lucide-react"
 
 // Force dynamic rendering to always show latest events
 export const dynamic = 'force-dynamic'
@@ -27,7 +28,7 @@ export default async function HomePage() {
                 <div className="space-y-2">
                   <label className="block text-sm font-semibold text-gray-900">LOCATION</label>
                   <div className="flex items-center gap-2 text-gray-600">
-                    <span>📍</span>
+                    <MapPin className="w-5 h-5 text-blue-600" />
                     <input type="text" placeholder="City or Zip Code" className="w-full outline-none bg-transparent" />
                   </div>
                 </div>
@@ -36,7 +37,7 @@ export default async function HomePage() {
                 <div className="space-y-2">
                   <label className="block text-sm font-semibold text-gray-900">DATES</label>
                   <div className="flex items-center gap-2 text-gray-600">
-                    <span>📅</span>
+                    <Calendar className="w-5 h-5 text-blue-600" />
                     <select className="w-full outline-none bg-transparent">
                       <option>All Dates</option>
                     </select>
