@@ -36,7 +36,7 @@ export async function generateTicketPDF(
   const startX = 15
   const startY = 30
   const width = 180
-  const height = 90
+  const height = 110 // Increased height
   const leftWidth = width * 0.7
   const rightWidth = width * 0.3
 
@@ -162,7 +162,7 @@ export async function generateTicketPDF(
     drawField("ROW", row, fieldX, gridY)
     fieldX += colWidth
   }
-  drawField("STAT", seatInfo, fieldX, gridY)
+  drawField("SEAT", seatInfo, fieldX, gridY)
 
   // Second Row: Date, Time, Location
   gridY += 20

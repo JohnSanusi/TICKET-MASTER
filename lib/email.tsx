@@ -35,7 +35,7 @@ export async function sendTicketEmail(
       [MOCK EMAIL]
       To: ${to}
       Subject: Your Ticket for ${event.title}
-      Stat: ${seatInfo}
+      Seat: ${seatInfo}
       Ticket ID: ${ticketId}
       Event: ${event.title}
       Date: ${event.date} at ${event.time}
@@ -78,7 +78,7 @@ export async function sendTicketEmail(
     const body = {
       from,
       to: [to],
-      subject: `🎟️ ${event.title} - Stat ${seatInfo}`,
+      subject: `🎟️ ${event.title} - Seat ${seatInfo}`,
       html: `
         <!DOCTYPE html>
         <html>
