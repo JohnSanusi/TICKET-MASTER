@@ -36,7 +36,7 @@ export async function generateTicketPDF(
   const startX = 15
   const startY = 30
   const width = 180
-  const height = 110 // Increased height
+  const height = 110  // Increased from 90 to 110
   const leftWidth = width * 0.7
   const rightWidth = width * 0.3
 

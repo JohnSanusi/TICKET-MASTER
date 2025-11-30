@@ -35,7 +35,7 @@ export async function sendTicketEmail(
       [MOCK EMAIL]
       To: ${to}
       Subject: Your Ticket for ${event.title}
-      Seat: ${seatInfo}
+      Stat: ${seatInfo}
       Ticket ID: ${ticketId}
       Event: ${event.title}
       Date: ${event.date} at ${event.time}
@@ -78,113 +78,27 @@ export async function sendTicketEmail(
     const body = {
       from,
       to: [to],
-      subject: `🎟️ ${event.title} - Seat ${seatInfo}`,
-      html: `
-        <!DOCTYPE html>
-        <html>
-        <body style="margin: 0; padding: 0; background-color: #f3f4f6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
-          <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f3f4f6; padding: 40px 0;">
-            <tr>
-              <td align="center">
-                <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; width: 100%; font-family: sans-serif;">
-                  
-                  <!-- Top Header Text -->
-                  <tr>
-                    <td style="padding-bottom: 20px;">
-                      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                        <tr>
-                          <td align="left">
-                            <h2 style="margin: 0; font-size: 24px; font-weight: 700; color: #111827;">This is your ticket</h2>
-                          </td>
-                          <td align="right">
-                             <!-- Branding / Logo Area -->
-                             <div style="font-size: 14px; font-weight: 600; color: #4b5563; display: flex; align-items: center; justify-content: flex-end;">
-                                <span style="margin-right: 8px;">Google Developer Groups</span>
-                                <!-- Placeholder Logo Icon -->
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1200px-Google_%22G%22_Logo.svg.png" width="20" height="20" alt="Logo" style="vertical-align: middle;" />
-                             </div>
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
+      subject: `🎟️ Your Ticket for ${event.title}`,
+      text: `
+Hello!
 
-                  <tr>
-                    <td style="padding: 0;">
-                      
-                      <!-- Ticket Card -->
-                      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
-                        <tr>
-                          <!-- Left Section (Main Info) -->
-                          <td width="65%" style="padding: 30px; vertical-align: top; border-right: 1px dashed #e5e7eb;">
-                            
-                            <!-- Event Image / Logo -->
-                            ${event.image ? `
-                            <div style="margin-bottom: 20px;">
-                              <img src="${event.image}" alt="Event Image" style="max-width: 100%; height: auto; max-height: 60px; object-fit: contain; border-radius: 4px;" />
-                            </div>
-                            ` : `
-                            <div style="margin-bottom: 20px;">
-                               <div style="width: 40px; height: 40px; background-color: #2563eb; border-radius: 8px; color: white; font-size: 16px; font-weight: 700; line-height: 40px; text-align: center;">${initials}</div>
-                            </div>
-                            `}
+Your ticket for ${event.title} is attached to this email.
 
-                            <!-- Event Details -->
-                            <div style="margin-bottom: 30px;">
-                              ${event.artistName ? `<div style="font-size: 14px; color: #6b7280; margin-bottom: 4px;">${event.artistName}</div>` : ''}
-                              <h1 style="margin: 0 0 10px 0; font-size: 22px; font-weight: 800; color: #111827; line-height: 1.2;">${event.title}</h1>
-                              
-                              <div style="font-size: 12px; color: #4b5563; line-height: 1.5;">
-                                <div style="margin-bottom: 2px;">${event.location}</div>
-                                <div style="font-weight: 700; text-transform: uppercase;">${event.date}, ${event.time}</div>
-                              </div>
-                            </div>
+Event Details:
+- Event: ${event.title}
+- Date: ${event.date}
+- Time: ${event.time}
+- Location: ${event.location}
+- Seat: ${seatInfo}
+- Ticket ID: ${ticketId}
 
-                            <!-- Ticket Footer Details -->
-                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: auto;">
-                              <tr>
-                                <td style="padding-right: 15px; vertical-align: top;">
-                                  <div style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; margin-bottom: 4px;">ISSUED TO</div>
-                                  <div style="font-size: 12px; font-weight: 600; color: #1f2937;">${to.split('@')[0]}</div>
-                                  <div style="font-size: 10px; color: #6b7280;">${to}</div>
-                                </td>
-                                <td style="padding-right: 15px; vertical-align: top;">
-                                  <div style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; margin-bottom: 4px;">ORDER NUMBER</div>
-                                  <div style="font-size: 12px; font-weight: 600; color: #1f2937;">${ticketId.substring(0, 12)}</div>
-                                </td>
-                                <td style="vertical-align: top;">
-                                  <div style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; margin-bottom: 4px;">TICKET</div>
-                                  <div style="font-size: 12px; font-weight: 600; color: #1f2937;">${event.ticketType || 'General Admission'}</div>
-                                  <div style="font-size: 10px; color: #6b7280;">${seatInfo}</div>
-                                </td>
-                              </tr>
-                            </table>
+Please download and save the attached PDF ticket. You will need to present it at the event.
 
-                          </td>
+Thank you for your purchase!
 
-                          <!-- Right Section (QR Code) -->
-                          <td width="35%" style="background-color: white; padding: 30px; text-align: center; vertical-align: middle;">
-                            <img src="${qrCodeData}" alt="QR Code" width="150" height="150" style="display: block; margin: 0 auto; max-width: 100%; height: auto;" />
-                          </td>
-                        </tr>
-                      </table>
-                      
-                      <!-- Footer -->
-                      <div style="text-align: center; padding-top: 20px;">
-                        <p style="font-size: 11px; color: #9ca3af; margin: 0;">
-                          © ${new Date().getFullYear()} EventHub. All rights reserved.
-                        </p>
-                      </div>
-
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-          </table>
-        </body>
-        </html>
-      `,
+Best regards,
+${senderName}
+      `.trim(),
       attachments: attachments,
     }
 
