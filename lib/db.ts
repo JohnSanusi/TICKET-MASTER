@@ -6,10 +6,10 @@ if (!MONGODB_URI) {
   throw new Error("DATABASE_URL is not defined")
 }
 
-let cached = global.mongoose
+let cached = (global as any).mongoose
 
 if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null }
+  cached = (global as any).mongoose = { conn: null, promise: null }
 }
 
 async function connectDB() {
@@ -18,10 +18,10 @@ async function connectDB() {
   }
 
   if (!cached.promise) {
-    const opts = {
+    const opts: mongoose.ConnectOptions = {
       bufferCommands: false,
       serverApi: {
-        version: "1",
+        version: "1" as any,
         strict: true,
         deprecationErrors: true,
       },
