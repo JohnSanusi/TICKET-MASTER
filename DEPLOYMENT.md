@@ -1,53 +1,80 @@
-# Deployment Guide: Using Supabase
+# Deployment Guide: MongoDB Atlas
 
-## 1. Create Supabase Database
+MongoDB Atlas is a fully managed cloud database that works perfectly with Vercel and other hosting platforms.
 
-1. Go to [supabase.com](https://supabase.com) and sign up.
-2. Click **"New Project"**.
-3. Enter a Name (e.g., `ticketmaster`) and a strong Database Password.
-4. Choose a Region close to you.
-5. Click **"Create new project"**.
+## 1. Create MongoDB Atlas Account
 
-## 2. Get Connection String
+1. Go to [mongodb.com/cloud/atlas](https://www.mongodb.com/cloud/atlas)
+2. Click **"Try Free"** and sign up
+3. Choose the **FREE** tier (M0 Sandbox)
 
-1. Once the project is created, go to **Project Settings** (cog icon) -> **Database**.
-2. Under **Connection parameters**, find the **Connection String** section.
-3. Click on the **"URI"** tab.
-4. **IMPORTANT**: Copy the **"Transaction"** connection string (Mode: Transaction). It looks like this:
+## 2. Create a Database
+
+1. Click **"Build a Database"**
+2. Choose **M0 FREE** tier
+3. Select a cloud provider and region (choose one close to you)
+4. Click **"Create Cluster"**
+
+## 3. Configure Database Access
+
+1. Go to **Database Access** (left sidebar)
+2. Click **"Add New Database User"**
+3. Choose **Password** authentication
+4. Create a username and strong password (save these!)
+5. Set privileges to **"Read and write to any database"**
+6. Click **"Add User"**
+
+## 4. Configure Network Access
+
+1. Go to **Network Access** (left sidebar)
+2. Click **"Add IP Address"**
+3. Click **"Allow Access from Anywhere"** (for development)
+   - IP: `0.0.0.0/0`
+4. Click **"Confirm"**
+
+## 5. Get Connection String
+
+1. Go to **Database** → Click **"Connect"**
+2. Choose **"Connect your application"**
+3. Copy the connection string (looks like):
    ```
-   postgres://postgres.[project-ref]:[password]@aws-0-[region].pooler.supabase.com:6543/postgres
+   mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority
    ```
-   *Note: If you don't see a pooler URL, the direct connection string (port 5432) will also work, but the pooler (port 6543) is better for Vercel.*
+4. Replace `<username>` and `<password>` with your actual credentials
+5. Add your database name before the `?`:
+   ```
+   mongodb+srv://user:pass@cluster0.xxxxx.mongodb.net/ticketmaster?retryWrites=true&w=majority
+   ```
 
-5. Replace `[password]` with the password you created in step 1.
+## 6. Configure Environment Variables
 
-## 3. Configure Storage (Required for Images)
-
-1. Go to your Supabase project dashboard -> **Storage**.
-2. Click **"New Bucket"**.
-3. Name it `events`.
-4. Make it **Public**.
-5. Click **"Save"**.
-
-### Local Setup
-Update your `.env` file:
+### Local Setup (.env)
 ```bash
-DATABASE_URL="your-supabase-connection-string"
-```
-
-Then push your schema:
-```bash
-npm run db:push
+DATABASE_URL="mongodb+srv://user:pass@cluster0.xxxxx.mongodb.net/ticketmaster?retryWrites=true&w=majority"
 ```
 
 ### Vercel Setup
-1. Go to your Vercel Project Settings -> **Environment Variables**.
-2. Add/Update `DATABASE_URL` with your Supabase connection string.
-3. Redeploy your project.
+1. Go to Vercel Project Settings → **Environment Variables**
+2. Add `DATABASE_URL` with your MongoDB connection string
 
-## 5. Verify Build Command
-Ensure your Vercel **Build Command** (in Settings -> General) is:
+### Supabase Storage (for images)
+3. Add these for image uploads:
+   - `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase Project URL
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase Anon Key
+
+## 7. Deploy to Vercel
+
+Your Vercel **Build Command** should be:
 ```bash
 npm run build
 ```
-(You should run `npm run db:push` locally to update the database schema).
+
+That's it! MongoDB Atlas works automatically with Vercel.
+
+## MongoDB Atlas Benefits
+- ✅ Works on Vercel (serverless-friendly)
+- ✅ Generous free tier (512 MB storage)
+- ✅ No cold starts
+- ✅ Automatic backups
+- ✅ Easy to scale
+- ✅ No schema migrations needed

@@ -35,6 +35,12 @@ export default function EventDetailPage() {
   const [selectedSeat, setSelectedSeat] = useState<{ row: string; num: number } | null>(null)
   const [email, setEmail] = useState("")
   const [name, setName] = useState("")
+  const [bookingData, setBookingData] = useState({
+    section: "",
+    ticketType: "",
+    level: ""
+  })
+
   const [claiming, setClaiming] = useState(false)
 
   useEffect(() => {
@@ -80,6 +86,9 @@ export default function EventDetailPage() {
           seatNum: selectedSeat.num,
           email,
           name,
+          section: bookingData.section,
+          ticketType: bookingData.ticketType,
+          level: bookingData.level
         }),
       })
 
@@ -227,6 +236,36 @@ export default function EventDetailPage() {
                         required
                         className="border-gray-300"
                       />
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-2">
+                       <div>
+                        <label className="text-xs font-bold text-gray-900 mb-1 block">Section</label>
+                        <Input
+                          value={bookingData.section}
+                          onChange={(e) => setBookingData({...bookingData, section: e.target.value})}
+                          placeholder="A"
+                          className="border-gray-300 text-sm"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs font-bold text-gray-900 mb-1 block">Type</label>
+                        <Input
+                          value={bookingData.ticketType}
+                          onChange={(e) => setBookingData({...bookingData, ticketType: e.target.value})}
+                          placeholder="VIP"
+                          className="border-gray-300 text-sm"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs font-bold text-gray-900 mb-1 block">Level</label>
+                        <Input
+                          value={bookingData.level}
+                          onChange={(e) => setBookingData({...bookingData, level: e.target.value})}
+                          placeholder="1"
+                          className="border-gray-300 text-sm"
+                        />
+                      </div>
                     </div>
 
                     <Button

@@ -25,9 +25,7 @@ export function CreateEventForm() {
     date: "",
     time: "",
     image: "",
-    section: "",
-    ticketType: "",
-    level: "",
+    maxTickets: 50,
   })
   const [timerDuration, setTimerDuration] = useState({
     days: 0,
@@ -85,9 +83,7 @@ export function CreateEventForm() {
         date: formData.date, // Display date
         time: formData.time, // Display time
         image: formData.image,
-        section: formData.section,
-        ticketType: formData.ticketType,
-        level: formData.level,
+        maxTickets: formData.maxTickets,
         hasTimer,
         eventDate, // Timer target date
         eventTime, // Timer target time
@@ -162,35 +158,24 @@ export function CreateEventForm() {
             />
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
-            <div>
-              <label className="text-sm font-medium">Section</label>
-              <Input
-                name="section"
-                value={formData.section}
-                onChange={handleChange}
-                placeholder="e.g., VIP, A, B"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Ticket Type</label>
-              <Input
-                name="ticketType"
-                value={formData.ticketType}
-                onChange={handleChange}
-                placeholder="e.g., General, VIP"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Level</label>
-              <Input
-                name="level"
-                value={formData.level}
-                onChange={handleChange}
-                placeholder="e.g., Floor, Balcony"
-              />
-            </div>
+          <div>
+            <label className="text-sm font-medium">Maximum Tickets</label>
+            <Input
+              name="maxTickets"
+              type="number"
+              min="1"
+              max="1000"
+              value={formData.maxTickets}
+              onChange={handleChange}
+              placeholder="Enter maximum number of tickets"
+              required
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Total number of tickets that can be generated for this event
+            </p>
           </div>
+
+          {/* Section, Ticket Type, Level removed from here */}
 
           <div className="grid grid-cols-2 gap-4">
             <div>

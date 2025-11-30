@@ -1,12 +1,19 @@
-export const ROWS = ["A", "B", "C", "D", "E"]
-export const SEATS_PER_ROW = 10
+export const ROWS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
 
-export function generateDefaultSeatMap() {
+export function generateDefaultSeatMap(maxTickets: number = 50) {
   const seats = []
+  const seatsPerRow = Math.ceil(maxTickets / ROWS.length)
+  let remainingSeats = maxTickets
+  
   for (const row of ROWS) {
-    for (let num = 1; num <= SEATS_PER_ROW; num++) {
+    if (remainingSeats <= 0) break
+    
+    const seatsInThisRow = Math.min(seatsPerRow, remainingSeats)
+    for (let num = 1; num <= seatsInThisRow; num++) {
       seats.push({ row, num, available: true })
     }
+    remainingSeats -= seatsInThisRow
   }
+  
   return seats
 }

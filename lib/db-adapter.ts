@@ -1,73 +1,67 @@
-import { dbClient } from "./db"
-import { events, claimedSeats, seats } from "./schema"
-import { eq, desc, and } from "drizzle-orm"
+import connectDB from "./db"
+import { Event, ClaimedSeat } from "./models"
 
 export const db = {
   event: {
     create: async (data: any) => {
-      const [result] = await dbClient.insert(events).values(data).returning()
-      return result
+      await connectDB()
+      const event = await Event.create(data)
+      return JSON.parse(JSON.stringify(event))
     },
     findUnique: async (where: { id: string }) => {
-      return dbClient.query.events.findFirst({
-        where: eq(events.id, where.id),
-      })
+      await connectDB()
+      const event = await Event.findById(where.id)
+      return event ? JSON.parse(JSON.stringify(event)) : null
     },
     findMany: async (options?: any) => {
-      // Drizzle doesn't support generic "options" object like Prisma directly
-      // We'll implement basic ordering
-      return dbClient.query.events.findMany({
-        orderBy: [desc(events.createdAt)],
-      })
+      await connectDB()
+      const events = await Event.find().sort({ createdAt: -1 })
+      return JSON.parse(JSON.stringify(events))
     },
     update: async (params: { where: { id: string }; data: any }) => {
-      const [result] = await dbClient
-        .update(events)
-        .set(params.data)
-        .where(eq(events.id, params.where.id))
-        .returning()
-      return result
+      await connectDB()
+      const event = await Event.findByIdAndUpdate(params.where.id, params.data, { new: true })
+      return event ? JSON.parse(JSON.stringify(event)) : null
     },
     delete: async (where: { id: string }) => {
-      const [result] = await dbClient
-        .delete(events)
-        .where(eq(events.id, where.id))
-        .returning()
-      return result
+      await connectDB()
+      const event = await Event.findByIdAndDelete(where.id)
+      return event ? JSON.parse(JSON.stringify(event)) : null
     },
     findUniqueWithClaims: async (where: { id: string }) => {
-      return dbClient.query.events.findFirst({
-        where: eq(events.id, where.id),
-        with: {
-          claimedSeats: true,
-          seats: true, // Also include seats if needed
-        },
-      })
+      await connectDB()
+      const event = await Event.findById(where.id)
+      if (!event) return null
+      
+      const claimedSeats = await ClaimedSeat.find({ eventId: where.id })
+      const eventObj = JSON.parse(JSON.stringify(event))
+      eventObj.claimedSeats = JSON.parse(JSON.stringify(claimedSeats))
+      return eventObj
     },
     findManyWithClaims: async () => {
-      return dbClient.query.events.findMany({
-        orderBy: [desc(events.createdAt)],
-        with: {
-          claimedSeats: true,
-        },
-      })
+      await connectDB()
+      const events = await Event.find().sort({ createdAt: -1 })
+      const eventsWithClaims = await Promise.all(
+        events.map(async (event) => {
+          const claimedSeats = await ClaimedSeat.find({ eventId: event._id.toString() })
+          const eventObj = JSON.parse(JSON.stringify(event))
+          eventObj.claimedSeats = JSON.parse(JSON.stringify(claimedSeats))
+          return eventObj
+        })
+      )
+      return eventsWithClaims
     },
   },
   claimedSeat: {
     create: async (data: any) => {
-      const [result] = await dbClient.insert(claimedSeats).values(data).returning()
-      return result
+      await connectDB()
+      const claim = await ClaimedSeat.create(data)
+      return JSON.parse(JSON.stringify(claim))
     },
     findFirst: async (where: any) => {
-      // Construct where clause dynamically
-      const conditions = []
-      if (where.eventId) conditions.push(eq(claimedSeats.eventId, where.eventId))
-      if (where.seatRow) conditions.push(eq(claimedSeats.seatRow, where.seatRow))
-      if (where.seatNum) conditions.push(eq(claimedSeats.seatNum, where.seatNum))
-      
-      return dbClient.query.claimedSeats.findFirst({
-        where: and(...conditions),
-      })
+      await connectDB()
+      const claim = await ClaimedSeat.findOne(where)
+      return claim ? JSON.parse(JSON.stringify(claim)) : null
     },
   },
 }

@@ -10,13 +10,14 @@ export async function createEvent(data: {
   date: string
   time: string
   image?: string
+  maxTickets?: number
   hasTimer?: boolean
   eventDate?: string
   eventTime?: string
 }) {
   try {
     console.log('[Server Action] Creating event with data:', data)
-    const seatMap = generateDefaultSeatMap()
+    const seatMap = generateDefaultSeatMap(data.maxTickets || 50)
 
     const event = await db.event.create({
       title: data.title,
@@ -26,6 +27,7 @@ export async function createEvent(data: {
       time: data.time,
       image: data.image || null,
       seatMap: JSON.stringify(seatMap),
+      maxTickets: data.maxTickets || 50,
       hasTimer: data.hasTimer || false,
       eventDate: data.eventDate || null,
       eventTime: data.eventTime || null,

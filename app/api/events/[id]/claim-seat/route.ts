@@ -8,7 +8,7 @@ import path from "path"
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   try {
-    const { seatRow, seatNum, email, name } = await request.json()
+    const { seatRow, seatNum, email, name, section, ticketType, level } = await request.json()
 
     const ticketId = `TKT-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
 
@@ -36,6 +36,9 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       seatNum,
       email,
       name,
+      section,
+      ticketType,
+      level,
       ticketId,
     })
 
@@ -53,10 +56,10 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       ticketId,
       name,
       eventData.artistName || undefined,
-      eventData.section || undefined,
+      section || undefined,
       seatRow, // Use the requested seat row directly
-      eventData.ticketType || undefined,
-      eventData.level || undefined,
+      ticketType || undefined,
+      level || undefined,
       eventData.image || undefined
     )
 
@@ -74,20 +77,20 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         email, 
         ticketFilePath, 
         {
-          artistName: event.artistName,
-          title: event.title,
-          date: event.date,
-          time: event.time,
-          location: event.location,
-          image: event.image,
-          section: event.section,
-          ticketType: event.ticketType,
-          level: event.level
+          artistName: eventData.artistName,
+          title: eventData.title,
+          date: eventData.date,
+          time: eventData.time,
+          location: eventData.location,
+          image: eventData.image,
+          section: section,
+          ticketType: ticketType,
+          level: level
         }, 
         `${seatRow}${seatNum}`,
         ticketId,
         seatRow,
-        event.section || undefined
+        section || undefined
       )
     } catch (error) {
       console.error("Failed to send email (continuing anyway):", error)
