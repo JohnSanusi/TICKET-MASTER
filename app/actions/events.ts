@@ -4,6 +4,7 @@ import { db } from "@/lib/db-adapter"
 import { generateDefaultSeatMap } from "@/lib/constants"
 
 export async function createEvent(data: {
+  artistName?: string
   title: string
   description: string
   location: string
@@ -20,6 +21,7 @@ export async function createEvent(data: {
     const seatMap = generateDefaultSeatMap(data.maxTickets || 50)
 
     const event = await db.event.create({
+      artistName: data.artistName || null,
       title: data.title,
       description: data.description,
       location: data.location,
@@ -99,9 +101,7 @@ export async function getAllEvents() {
 
 export async function deleteEvent(eventId: string) {
   try {
-    await db.event.delete({
-      where: { id: eventId },
-    })
+    await db.event.delete({ id: eventId })
     return { success: true }
   } catch (error) {
     console.error("Failed to delete event:", error)

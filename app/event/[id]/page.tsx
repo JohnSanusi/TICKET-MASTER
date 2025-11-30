@@ -24,6 +24,7 @@ interface Event {
   hasTimer: boolean
   eventDate: string | null
   eventTime: string | null
+  seatMap?: string
   claimedSeats: Array<{ seatRow: string; seatNum: number }>
 }
 
@@ -193,7 +194,7 @@ export default function EventDetailPage() {
                   <CardDescription>Click on an available seat</CardDescription>
                 </CardHeader>
                 <CardContent className="p-8">
-                  <SeatMap eventId={event.id} claimedSeats={event.claimedSeats} onSelectSeat={handleSelectSeat} />
+                  <SeatMap eventId={event.id} claimedSeats={event.claimedSeats} onSelectSeat={handleSelectSeat} seatMap={event.seatMap} />
                 </CardContent>
               </Card>
 
