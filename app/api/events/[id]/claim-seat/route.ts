@@ -2,8 +2,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db-adapter"
 import { generateTicketPDF } from "@/lib/pdf-generator"
 import { sendTicketEmail } from "@/lib/email"
-import fs from "fs"
-import path from "path"
+
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -63,19 +62,11 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       eventData.image || undefined
     )
 
-    const ticketDir = path.join(process.cwd(), "public", "tickets")
-    if (!fs.existsSync(ticketDir)) {
-      fs.mkdirSync(ticketDir, { recursive: true })
-    }
-
-    const ticketFilePath = path.join(ticketDir, `${ticketId}.pdf`)
-    fs.writeFileSync(ticketFilePath, pdfBuffer)
-
     // Send email
     try {
       await sendTicketEmail(
         email, 
-        ticketFilePath, 
+        Buffer.from(pdfBuffer), 
         {
           artistName: eventData.artistName,
           title: eventData.title,

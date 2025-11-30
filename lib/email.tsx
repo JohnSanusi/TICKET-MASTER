@@ -1,4 +1,4 @@
-import fs from "fs"
+
 
 import QRCode from "qrcode"
 
@@ -18,7 +18,7 @@ interface EventDetails {
 
 export async function sendTicketEmail(
   to: string, 
-  ticketPath: string, 
+  ticketBuffer: Buffer, 
   event: EventDetails, 
   seatInfo: string, 
   ticketId: string,
@@ -36,7 +36,7 @@ export async function sendTicketEmail(
       To: ${to}
       Subject: Your Ticket for ${event.title}
       Stat: ${seatInfo}
-      Ticket Path: ${ticketPath}
+      Ticket ID: ${ticketId}
       Event: ${event.title}
       Date: ${event.date} at ${event.time}
       Location: ${event.location}
@@ -49,9 +49,8 @@ export async function sendTicketEmail(
     // Generate QR Code for email preview
     const qrCodeData = await QRCode.toDataURL(ticketId)
 
-    // Read the PDF file and convert to base64
-    const fileBuffer = fs.readFileSync(ticketPath)
-    const base64Content = fileBuffer.toString("base64")
+    // Convert buffer to base64
+    const base64Content = ticketBuffer.toString("base64")
     const filename = `ticket-${event.title.replace(/\s+/g, "-").toLowerCase()}.pdf`
 
     // Only attach the PDF

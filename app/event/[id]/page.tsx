@@ -142,7 +142,7 @@ export default function EventDetailPage() {
     <>
       <Navbar />
       <main className="min-h-screen bg-white">
-        <div className="relative h-96 md:h-screen bg-black overflow-hidden">
+        <div className="relative h-[50vh] md:h-screen bg-black overflow-hidden">
           {event.image && event.image !== "/placeholder.svg" ? (
             <Image
               src={event.image || "/placeholder.svg"}
@@ -155,20 +155,20 @@ export default function EventDetailPage() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
 
           {/* Title over image */}
-          <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-16">
+          <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-16">
             <div className="space-y-4">
-              <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight">{event.title}</h1>
-              <div className="flex flex-wrap gap-6 text-white/90 text-lg">
+              <h1 className="text-3xl md:text-6xl font-bold text-white leading-tight">{event.title}</h1>
+              <div className="flex flex-wrap gap-4 md:gap-6 text-white/90 text-sm md:text-lg">
                 <div className="flex items-center gap-2">
-                  <MapPin className="w-5 h-5" />
+                  <MapPin className="w-4 h-4 md:w-5 md:h-5" />
                   <span>{event.location}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5" />
+                  <Calendar className="w-4 h-4 md:w-5 md:h-5" />
                   <span>{event.date}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Clock className="w-5 h-5" />
+                  <Clock className="w-4 h-4 md:w-5 md:h-5" />
                   <span>{event.time}</span>
                 </div>
               </div>
@@ -176,10 +176,10 @@ export default function EventDetailPage() {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 py-12">
+        <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
           {/* Countdown Timer */}
           {event.hasTimer && event.eventDate && event.eventTime && (
-            <div className="mb-12">
+            <div className="mb-8 md:mb-12">
               <CountdownTimer eventDate={event.eventDate} eventTime={event.eventTime} label="Starts in" />
             </div>
           )}
@@ -193,21 +193,23 @@ export default function EventDetailPage() {
                   <CardTitle className="text-blue-600">Select Your Seat</CardTitle>
                   <CardDescription>Click on an available seat</CardDescription>
                 </CardHeader>
-                <CardContent className="p-8">
-                  <SeatMap eventId={event.id} claimedSeats={event.claimedSeats} onSelectSeat={handleSelectSeat} seatMap={event.seatMap} />
+                <CardContent className="p-4 md:p-8 overflow-x-auto">
+                  <div className="min-w-[300px]">
+                    <SeatMap eventId={event.id} claimedSeats={event.claimedSeats} onSelectSeat={handleSelectSeat} seatMap={event.seatMap} />
+                  </div>
                 </CardContent>
               </Card>
 
               {/* Description */}
               <div className="space-y-4">
-                <h3 className="text-2xl font-bold text-gray-900">About This Event</h3>
-                <p className="text-gray-700 leading-relaxed text-lg">{event.description}</p>
+                <h3 className="text-xl md:text-2xl font-bold text-gray-900">About This Event</h3>
+                <p className="text-gray-700 leading-relaxed text-base md:text-lg">{event.description}</p>
               </div>
             </div>
 
             {/* Right: Booking Sidebar */}
             <div>
-              <Card className="border-2 border-blue-600 sticky top-24 overflow-hidden">
+              <Card className="border-2 border-blue-600 lg:sticky lg:top-24 overflow-hidden">
                 <CardHeader className="bg-blue-600 text-white">
                   <CardTitle>Secure Your Ticket</CardTitle>
                   <CardDescription className="text-blue-100">
