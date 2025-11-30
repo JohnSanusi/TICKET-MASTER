@@ -3,6 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
+import { MapPin, Calendar } from "lucide-react"
 
 interface EventCardProps {
   id: string
@@ -40,13 +41,13 @@ export function EventCard({ id, title, date, time, location, image, isAdmin }: E
           <div className="space-y-2">
             <h3 className="font-bold text-base line-clamp-2 group-hover:text-blue-600 transition-colors">{title}</h3>
             <div className="flex items-start gap-1.5 text-sm text-gray-600">
-              <span>📍</span>
+              <MapPin className="w-4 h-4 text-blue-600 shrink-0" />
               <span className="line-clamp-1">{location}</span>
             </div>
           </div>
 
           <div className="flex items-center gap-1.5 text-xs text-gray-500 pt-3 border-t border-gray-200">
-            <span>📅</span>
+            <Calendar className="w-4 h-4 text-blue-600 shrink-0" />
             <span>{date}</span>
             {time && <span className="text-gray-400">•</span>}
             {time && <span>{time}</span>}
