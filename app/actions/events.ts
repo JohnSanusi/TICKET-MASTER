@@ -86,8 +86,13 @@ export async function getEventById(eventId: string) {
 }
 
 export async function getAllEvents() {
-  const events = await db.event.findManyWithClaims()
-  return events
+  try {
+    const events = await db.event.findManyWithClaims()
+    return events
+  } catch (error) {
+    console.error("Failed to fetch events:", error)
+    return []
+  }
 }
 
 export async function deleteEvent(eventId: string) {

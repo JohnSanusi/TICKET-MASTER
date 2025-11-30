@@ -19,3 +19,95 @@ Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
 [00:04:20.493] Server  LOG      ○ Compiling /api/events/[id]/claim-seat ...
 [00:04:37.331] Server  LOG     Attempting to send email to johnsanusi18@gmail.com for event hhjbfhjbdfs via Resend API
 [00:04:39.161] Server  LOG     Email sent successfully via Resend: "8efe5958-4ed2-4db0-a451-b1669482646b"
+[00:33:55.530] Server  LOG      ✓ Compiled in 15.9s
+[00:34:01.154] Browser ERROR   ./lib/db-adapter.ts:41:14
+Parsing ecmascript source code failed
+  39 |       })
+  40 |     },
+> 41 |       return prisma.event.findMany({
+     |              ^^^^^^
+  42 |         include: { claimedSeats: true },
+  43 |         orderBy: { createdAt: 'desc' },
+  44 |       })
+
+Unexpected token `prisma`. Expected ... , *,  (, [, :, , ?, =, an identifier, public, protected, private, readonly, <.
+
+Import trace:
+  Server Component:
+    ./lib/db-adapter.ts
+    ./app/actions/events.ts
+    ./app/page.tsx
+[00:34:01.154] Browser ERROR   ./lib/db-adapter.ts:41:14
+Parsing ecmascript source code failed
+  39 |       })
+  40 |     },
+> 41 |       return prisma.event.findMany({
+     |              ^^^^^^
+  42 |         include: { claimedSeats: true },
+  43 |         orderBy: { createdAt: 'desc' },
+  44 |       })
+
+Unexpected token `prisma`. Expected ... , *,  (, [, :, , ?, =, an identifier, public, protected, private, readonly, <.
+
+Import trace:
+  Server Component:
+    ./lib/db-adapter.ts
+    ./app/actions/events.ts
+    ./app/help/page.tsx
+[00:34:01.154] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <script>
+                      <RootLayout>
+                        <html lang="en">
+                          <body
+                            className="font-sans antialiased"
+-                           style={{overflow-x:"hidden",overflow-y:"hidden"}}
+                          >
+                  ...
+
+[00:34:02.075] Browser ERROR   ./lib/db-adapter.ts:41:14
+Parsing ecmascript source code failed
+  39 |       })
+  40 |     },
+> 41 |       return prisma.event.findMany({
+     |              ^^^^^^
+  42 |         include: { claimedSeats: true },
+  43 |         orderBy: { createdAt: 'desc' },
+  44 |       })
+
+Unexpected token `prisma`. Expected ... , *,  (, [, :, , ?, =, an identifier, public, protected, private, readonly, <.
+
+Import trace:
+  Server Component:
+    ./lib/db-adapter.ts
+    ./app/actions/events.ts
+    ./app/page.tsx
+[00:34:17.305] Browser WARN    Image with src "/uploads/1764523859717_Screenshot_from_2025-11-14_14-44-56.png" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+[00:39:03.621] Server  LOG      ✓ Compiled in 170ms
+[00:39:07.191] Server  LOG      ✓ Compiled in 927ms
