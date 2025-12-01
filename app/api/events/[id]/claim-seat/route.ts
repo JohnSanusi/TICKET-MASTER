@@ -7,18 +7,16 @@ import { sendTicketEmail } from "@/lib/email"
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   try {
-    const { seatRow, seatNum, email, name, section, ticketType, level } = await request.json()
+    const body = await request.json()
+    const { seats, seatRow, seatNum, email, name, section, ticketType, level } = body
 
-    const ticketId = `TKT-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+    // Support both multi-seat (seats array) and single seat (seatRow, seatNum) for backward compatibility
+    const seatsToBook: Array<{ row: string; num: number }> = seats && seats.length > 0 
+      ? seats 
+      : (seatRow && seatNum ? [{ row: seatRow, num: seatNum }] : [])
 
-    const existingClaim = await db.claimedSeat.findFirst({
-      eventId: id,
-      seatRow,
-      seatNum,
-    })
-
-    if (existingClaim) {
-      return NextResponse.json({ error: "Seat already claimed" }, { status: 400 })
+    if (seatsToBook.length === 0) {
+      return NextResponse.json({ error: "No seats selected" }, { status: 400 })
     }
 
     const event = await db.event.findUnique({
@@ -29,19 +27,39 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       return NextResponse.json({ error: "Event not found" }, { status: 404 })
     }
 
-    const claim = await db.claimedSeat.create({
-      eventId: id,
-      seatRow,
-      seatNum,
-      email,
-      name,
-      section,
-      ticketType,
-      level,
-      ticketId,
-    })
+    const ticketId = `TKT-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+    const claimedSeats = []
 
-    const seatInfo = `${seatRow}${seatNum}`
+    // Claim all seats
+    for (const seat of seatsToBook) {
+      const existingClaim = await db.claimedSeat.findFirst({
+        eventId: id,
+        seatRow: seat.row,
+        seatNum: seat.num,
+      })
+
+      if (existingClaim) {
+        return NextResponse.json({ error: `Seat ${seat.row}${seat.num} already claimed` }, { status: 400 })
+      }
+
+      const claim = await db.claimedSeat.create({
+        eventId: id,
+        seatRow: seat.row,
+        seatNum: seat.num,
+        email,
+        name,
+        section,
+        ticketType,
+        level,
+        ticketId,
+      })
+
+      claimedSeats.push(claim)
+    }
+
+    // Generate seat info string (e.g., "A1, A2, A3")
+    const seatInfo = seatsToBook.map(s => `${s.row}${s.num}`).join(', ')
+    const firstSeat = seatsToBook[0]
 
     // Cast event to any to bypass stale type definitions for new fields
     const eventData = event as any
@@ -56,7 +74,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       name,
       eventData.artistName || undefined,
       section || undefined,
-      seatRow, // Use the requested seat row directly
+      firstSeat.row, // Use the first seat row
       ticketType || undefined,
       level || undefined,
       eventData.image || undefined
@@ -78,9 +96,9 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
           ticketType: ticketType,
           level: level
         }, 
-        `${seatRow}${seatNum}`,
+        seatInfo,
         ticketId,
-        seatRow,
+        firstSeat.row,
         section || undefined
       )
     } catch (error) {
@@ -90,11 +108,13 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
     return NextResponse.json({
       success: true,
-      ticketId: claim.ticketId,
-      message: "Seat claimed successfully",
+      ticketId: ticketId,
+      seatsCount: claimedSeats.length,
+      message: `${claimedSeats.length} seat${claimedSeats.length > 1 ? 's' : ''} claimed successfully`,
     })
   } catch (error) {
-    console.error("Failed to claim seat:", error) // Updated error message
+    console.error("Failed to claim seat:", error)
     return NextResponse.json({ error: "Failed to claim seat" }, { status: 500 })
   }
 }
+

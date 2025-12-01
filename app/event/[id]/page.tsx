@@ -33,7 +33,7 @@ export default function EventDetailPage() {
   const eventId = params.id as string
   const [event, setEvent] = useState<Event | null>(null)
   const [loading, setLoading] = useState(true)
-  const [selectedSeat, setSelectedSeat] = useState<{ row: string; num: number } | null>(null)
+  const [selectedSeats, setSelectedSeats] = useState<Array<{ row: string; num: number }>>([])
   const [email, setEmail] = useState("")
   const [name, setName] = useState("")
   const [bookingData, setBookingData] = useState({
@@ -62,14 +62,14 @@ export default function EventDetailPage() {
     fetchEvent()
   }, [eventId])
 
-  const handleSelectSeat = (row: string, seatNum: number) => {
-    setSelectedSeat({ row, num: seatNum })
+  const handleSelectSeat = (seats: Array<{ row: string; num: number }>) => {
+    setSelectedSeats(seats)
   }
 
   const handleClaimSeat = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!selectedSeat) {
-      toast.error("Please select a seat")
+    if (selectedSeats.length === 0) {
+      toast.error("Please select at least one seat")
       return
     }
     if (!email || !name) {
@@ -83,8 +83,7 @@ export default function EventDetailPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          seatRow: selectedSeat.row,
-          seatNum: selectedSeat.num,
+          seats: selectedSeats,
           email,
           name,
           section: bookingData.section,
@@ -95,8 +94,8 @@ export default function EventDetailPage() {
 
       if (response.ok) {
         const result = await response.json()
-        toast.success(`Ticket claimed! Your PDF has been sent to ${email}`)
-        setSelectedSeat(null)
+        toast.success(`${selectedSeats.length} ticket${selectedSeats.length > 1 ? 's' : ''} claimed! Your PDF has been sent to ${email}`)
+        setSelectedSeats([])
         setEmail("")
         setName("")
         const eventResponse = await fetch(`/api/events/${eventId}`)
@@ -213,7 +212,9 @@ export default function EventDetailPage() {
                 <CardHeader className="bg-blue-600 text-white">
                   <CardTitle>Secure Your Ticket</CardTitle>
                   <CardDescription className="text-blue-100">
-                    {selectedSeat ? `Selected: ${selectedSeat.row}${selectedSeat.num}` : "Pick a seat above"}
+                    {selectedSeats.length > 0 
+                      ? `Selected: ${selectedSeats.map(s => `${s.row}${s.num}`).join(', ')}` 
+                      : "Pick seats above"}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-6">
@@ -273,10 +274,10 @@ export default function EventDetailPage() {
 
                     <Button
                       type="submit"
-                      disabled={!selectedSeat || claiming}
+                      disabled={selectedSeats.length === 0 || claiming}
                       className="w-full bg-blue-600 hover:bg-blue-700 text-white text-base font-bold py-6 rounded-md"
                     >
-                      {claiming ? "Processing..." : "Get Tickets"}
+                      {claiming ? "Processing..." : `Get ${selectedSeats.length > 0 ? selectedSeats.length : ''} Ticket${selectedSeats.length !== 1 ? 's' : ''}`}
                     </Button>
                   </form>
                 </CardContent>

@@ -81,6 +81,28 @@ export async function claimSeat(eventId: string, seatRow: string, seatNum: numbe
   return claim
 }
 
+export async function claimSeats(eventId: string, seats: Array<{ row: string; num: number }>, email: string, name: string) {
+  const results = []
+  const errors = []
+
+  for (const seat of seats) {
+    try {
+      const result = await claimSeat(eventId, seat.row, seat.num, email, name)
+      results.push(result)
+    } catch (error: any) {
+      errors.push({ seat, error: error.message })
+    }
+  }
+
+  if (errors.length > 0) {
+    // If some failed, we should probably revert the others or just return partial success
+    // For now, let's return the results and errors
+    return { success: results.length > 0, results, errors }
+  }
+
+  return { success: true, results }
+}
+
 export async function getEventById(eventId: string) {
   const event = await db.event.findUniqueWithClaims({
     id: eventId,
