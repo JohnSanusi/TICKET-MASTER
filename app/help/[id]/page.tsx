@@ -157,10 +157,10 @@ export default function EventAdminDetailPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-background py-12">
-        <div className="max-w-4xl mx-auto px-4 space-y-8">
+      <main className="min-h-screen bg-background py-6 md:py-12">
+        <div className="max-w-4xl mx-auto px-3 sm:px-4 space-y-6 md:space-y-8">
           {event.image && (
-            <div className="relative h-96 w-full overflow-hidden rounded-lg">
+            <div className="relative h-48 sm:h-64 md:h-80 lg:h-96 w-full overflow-hidden rounded-lg">
               <Image
                 src={event.image || "/placeholder.svg"}
                 alt={event.title}
@@ -171,27 +171,27 @@ export default function EventAdminDetailPage() {
             </div>
           )}
 
-          <div className="space-y-4">
-            <div className="flex items-start justify-between">
-              <div>
-                <h1 className="text-4xl font-bold">{event.title}</h1>
-                <p className="text-lg text-muted-foreground mt-2">{event.description}</p>
+          <div className="space-y-3 md:space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
+              <div className="flex-1">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight">{event.title}</h1>
+                <p className="text-base md:text-lg text-muted-foreground mt-2">{event.description}</p>
               </div>
-              <Button asChild variant="outline">
+              <Button asChild variant="outline" className="w-full sm:w-auto shrink-0">
                 <Link href={`/event/${event.id}`}>View Public Page</Link>
               </Button>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
               <div>
-                <p className="text-sm text-muted-foreground">Date & Time</p>
-                <p className="text-lg font-semibold">
+                <p className="text-xs sm:text-sm text-muted-foreground">Date & Time</p>
+                <p className="text-base md:text-lg font-semibold">
                   {event.date} at {event.time}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Location</p>
-                <p className="text-lg font-semibold">{event.location}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">Location</p>
+                <p className="text-base md:text-lg font-semibold break-words">{event.location}</p>
               </div>
             </div>
           </div>
@@ -199,7 +199,7 @@ export default function EventAdminDetailPage() {
           {event.hasTimer && event.eventDate && event.eventTime ? (
             <>
               <CountdownTimer eventDate={event.eventDate} eventTime={event.eventTime} label="Countdown" />
-              <p className="text-sm text-muted-foreground text-center">
+              <p className="text-xs sm:text-sm text-muted-foreground text-center">
                 Timer expires on {event.eventDate} at {event.eventTime}
               </p>
             </>
@@ -208,7 +208,7 @@ export default function EventAdminDetailPage() {
               <DialogTrigger asChild>
                 <Button className="w-full">Add Timer</Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className="w-[95vw] max-w-md">
                 <DialogHeader>
                   <DialogTitle>Add Event Timer</DialogTitle>
                   <DialogDescription>Set when the event countdown should reach zero</DialogDescription>
@@ -232,28 +232,28 @@ export default function EventAdminDetailPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Claimed Seats</CardTitle>
-              <CardDescription>{event.claimedSeats.length} seats claimed</CardDescription>
+              <CardTitle className="text-lg sm:text-xl">Claimed Seats</CardTitle>
+              <CardDescription className="text-sm">{event.claimedSeats.length} seats claimed</CardDescription>
             </CardHeader>
             <CardContent>
               {event.claimedSeats.length === 0 ? (
-                <p className="text-muted-foreground">No seats claimed yet</p>
+                <p className="text-muted-foreground text-sm">No seats claimed yet</p>
               ) : (
-                <div className="space-y-2 max-h-60 overflow-y-auto">
+                <div className="space-y-2 max-h-60 md:max-h-96 overflow-y-auto">
                   {event.claimedSeats.map((claim, idx) => (
-                    <div key={idx} className="flex justify-between items-center py-2 border-b last:border-0">
-                      <div>
-                        <p className="font-medium">{claim.name}</p>
-                        <p className="text-sm text-muted-foreground">{claim.email}</p>
+                    <div key={idx} className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 py-3 border-b last:border-0">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-sm sm:text-base truncate">{claim.name}</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground truncate">{claim.email}</p>
                       </div>
-                      <div className="flex items-center gap-4">
-                        <p className="font-semibold">
+                      <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4">
+                        <p className="font-semibold text-sm sm:text-base whitespace-nowrap">
                           Seat {claim.seatRow}
                           {claim.seatNum}
                         </p>
                         <button
                           onClick={() => handleDeleteTicketClick(claim.id, claim.name, `${claim.seatRow}${claim.seatNum}`)}
-                          className="p-2 text-red-600 hover:bg-red-50 rounded-full transition-colors"
+                          className="p-2 text-red-600 hover:bg-red-50 rounded-full transition-colors shrink-0"
                           title="Delete Ticket"
                         >
                           <Trash2 className="w-4 h-4" />
