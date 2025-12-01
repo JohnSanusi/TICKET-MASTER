@@ -108,3 +108,13 @@ export async function deleteEvent(eventId: string) {
     return { success: false, error: "Failed to delete event" }
   }
 }
+
+export async function deleteTicket(ticketId: string) {
+  try {
+    await db.claimedSeat.delete({ id: ticketId })
+    return { success: true }
+  } catch (error) {
+    console.error("Failed to delete ticket:", error)
+    return { success: false, error: "Failed to delete ticket" }
+  }
+}

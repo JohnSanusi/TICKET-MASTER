@@ -75,5 +75,10 @@ export const db = {
       const claim = await ClaimedSeat.findOne(where)
       return toObject(claim)
     },
+    delete: async (where: { id: string }) => {
+      await connectDB()
+      const claim = await ClaimedSeat.findByIdAndDelete(where.id)
+      return toObject(claim)
+    },
   },
 }

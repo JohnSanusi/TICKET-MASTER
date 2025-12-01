@@ -59,7 +59,7 @@ export function SeatMap({ eventId, claimedSeats, onSelectSeat, seatMap }: SeatMa
 
           return (
             <div key={row} className="flex gap-1 md:gap-2 items-center">
-              <span className="w-4 md:w-8 text-xs md:text-base font-semibold text-right">{row}</span>
+              {/* Row label removed as per request */}
               <div className="flex gap-0.5 md:gap-1 flex-wrap justify-center">
                 {seatsInRow.map((seatNum) => {
                 const seatKey = `${row}-${seatNum}`

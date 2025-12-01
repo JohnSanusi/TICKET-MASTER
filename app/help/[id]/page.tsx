@@ -20,6 +20,9 @@ import {
 } from "@/components/ui/dialog"
 import Link from "next/link"
 
+import { Trash2 } from "lucide-react"
+import { deleteTicket } from "@/app/actions/events"
+
 interface Event {
   id: string
   title: string
@@ -31,7 +34,7 @@ interface Event {
   hasTimer: boolean
   eventDate: string | null
   eventTime: string | null
-  claimedSeats: Array<{ seatRow: string; seatNum: number; name: string; email: string }>
+  claimedSeats: Array<{ id: string; seatRow: string; seatNum: number; name: string; email: string }>
 }
 
 export default function EventAdminDetailPage() {
@@ -98,6 +101,24 @@ export default function EventAdminDetailPage() {
       alert("Failed to add timer")
     } finally {
       setAddingTimer(false)
+    }
+  }
+
+  const handleDeleteTicket = async (ticketId: string) => {
+    if (confirm("Are you sure you want to delete this ticket?")) {
+      const result = await deleteTicket(ticketId)
+      if (result.success) {
+        setEvent((prev) =>
+          prev
+            ? {
+                ...prev,
+                claimedSeats: prev.claimedSeats.filter((seat) => seat.id !== ticketId),
+              }
+            : null,
+        )
+      } else {
+        alert("Failed to delete ticket")
+      }
     }
   }
 
@@ -215,10 +236,19 @@ export default function EventAdminDetailPage() {
                         <p className="font-medium">{claim.name}</p>
                         <p className="text-sm text-muted-foreground">{claim.email}</p>
                       </div>
-                      <p className="font-semibold">
-                        Seat {claim.seatRow}
-                        {claim.seatNum}
-                      </p>
+                      <div className="flex items-center gap-4">
+                        <p className="font-semibold">
+                          Seat {claim.seatRow}
+                          {claim.seatNum}
+                        </p>
+                        <button
+                          onClick={() => handleDeleteTicket(claim.id)}
+                          className="p-2 text-red-600 hover:bg-red-50 rounded-full transition-colors"
+                          title="Delete Ticket"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>

@@ -3,7 +3,9 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
-import { MapPin, Calendar } from "lucide-react"
+import { MapPin, Calendar, Trash2 } from "lucide-react"
+import { deleteEvent } from "@/app/actions/events"
+import { useRouter } from "next/navigation"
 
 interface EventCardProps {
   id: string
@@ -16,11 +18,30 @@ interface EventCardProps {
 }
 
 export function EventCard({ id, title, date, time, location, image, isAdmin }: EventCardProps) {
+  const router = useRouter()
   const href = isAdmin ? `/help/${id}` : `/event/${id}`
 
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (confirm("Are you sure you want to delete this event?")) {
+      await deleteEvent(id)
+      router.refresh()
+    }
+  }
+
   return (
-    <Link href={href}>
-      <Card className="overflow-hidden h-full flex flex-col group cursor-pointer hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 border border-gray-200">
+    <Link href={href} className="block h-full">
+      <Card className="overflow-hidden h-full flex flex-col group cursor-pointer hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 border border-gray-200 relative">
+        {isAdmin && (
+          <button
+            onClick={handleDelete}
+            className="absolute top-2 right-2 z-10 p-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors shadow-md"
+            title="Delete Event"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        )}
         <div className="relative h-48 bg-gray-200 overflow-hidden">
           {image && image !== "/placeholder.svg" ? (
             <Image
