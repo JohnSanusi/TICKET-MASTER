@@ -22,6 +22,7 @@ import Link from "next/link"
 
 import { Trash2 } from "lucide-react"
 import { deleteTicket } from "@/app/actions/events"
+import { ConfirmDialog } from "@/components/confirm-dialog"
 
 interface Event {
   id: string
@@ -46,6 +47,8 @@ export default function EventAdminDetailPage() {
   const [timerDate, setTimerDate] = useState("")
   const [timerTime, setTimerTime] = useState("")
   const [addingTimer, setAddingTimer] = useState(false)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [ticketToDelete, setTicketToDelete] = useState<{ id: string; name: string; seat: string } | null>(null)
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -104,22 +107,29 @@ export default function EventAdminDetailPage() {
     }
   }
 
-  const handleDeleteTicket = async (ticketId: string) => {
-    if (confirm("Are you sure you want to delete this ticket?")) {
-      const result = await deleteTicket(ticketId)
-      if (result.success) {
-        setEvent((prev) =>
-          prev
-            ? {
-                ...prev,
-                claimedSeats: prev.claimedSeats.filter((seat) => seat.id !== ticketId),
-              }
-            : null,
-        )
-      } else {
-        alert("Failed to delete ticket")
-      }
+  const handleDeleteTicketClick = (ticketId: string, name: string, seat: string) => {
+    setTicketToDelete({ id: ticketId, name, seat })
+    setDeleteDialogOpen(true)
+  }
+
+  const handleDeleteTicketConfirm = async () => {
+    if (!ticketToDelete) return
+    
+    const result = await deleteTicket(ticketToDelete.id)
+    if (result.success) {
+      setEvent((prev) =>
+        prev
+          ? {
+              ...prev,
+              claimedSeats: prev.claimedSeats.filter((seat) => seat.id !== ticketToDelete.id),
+            }
+          : null,
+      )
+    } else {
+      alert("Failed to delete ticket")
     }
+    setDeleteDialogOpen(false)
+    setTicketToDelete(null)
   }
 
   if (loading) {
@@ -242,7 +252,7 @@ export default function EventAdminDetailPage() {
                           {claim.seatNum}
                         </p>
                         <button
-                          onClick={() => handleDeleteTicket(claim.id)}
+                          onClick={() => handleDeleteTicketClick(claim.id, claim.name, `${claim.seatRow}${claim.seatNum}`)}
                           className="p-2 text-red-600 hover:bg-red-50 rounded-full transition-colors"
                           title="Delete Ticket"
                         >
@@ -257,6 +267,16 @@ export default function EventAdminDetailPage() {
           </Card>
         </div>
       </main>
+
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleDeleteTicketConfirm}
+        title="Delete Ticket"
+        description={ticketToDelete ? `Are you sure you want to delete the ticket for ${ticketToDelete.name} (Seat ${ticketToDelete.seat})? This action cannot be undone.` : ""}
+        confirmText="Delete Ticket"
+        cancelText="Cancel"
+      />
     </>
   )
 }
