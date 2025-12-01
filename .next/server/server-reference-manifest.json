@@ -66,6 +66,28 @@
       "filename": "app/actions/events.ts",
       "exportedName": "getEventById"
     },
+    "40e52b96d98da03514f4533da52bd4a94d0912228d": {
+      "workers": {
+        "app/help/page": {
+          "moduleId": 58468,
+          "async": false,
+          "exportedName": "deleteEvent",
+          "filename": "app/actions/events.ts"
+        },
+        "app/page": {
+          "moduleId": 91222,
+          "async": false,
+          "exportedName": "deleteEvent",
+          "filename": "app/actions/events.ts"
+        }
+      },
+      "layer": {
+        "app/help/page": "rsc",
+        "app/page": "rsc"
+      },
+      "filename": "app/actions/events.ts",
+      "exportedName": "deleteEvent"
+    },
     "70b65ae6490ce549e9724b966089305ab0c0c18c8a": {
       "workers": {
         "app/help/page": {

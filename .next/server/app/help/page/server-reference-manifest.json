@@ -45,6 +45,21 @@
       "exportedName": "getEventById",
       "filename": "app/actions/events.ts"
     },
+    "40e52b96d98da03514f4533da52bd4a94d0912228d": {
+      "workers": {
+        "app/help/page": {
+          "moduleId": 58468,
+          "async": false,
+          "exportedName": "deleteEvent",
+          "filename": "app/actions/events.ts"
+        }
+      },
+      "layer": {
+        "app/help/page": "rsc"
+      },
+      "exportedName": "deleteEvent",
+      "filename": "app/actions/events.ts"
+    },
     "70b65ae6490ce549e9724b966089305ab0c0c18c8a": {
       "workers": {
         "app/help/page": {
