@@ -59,15 +59,8 @@ export async function addTimerToEvent(eventId: string, eventDate: string, eventT
 export async function claimSeat(eventId: string, seatRow: string, seatNum: number, email: string, name: string) {
   const ticketId = `TKT-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
 
-  const existingClaim = await db.claimedSeat.findFirst({
-    eventId,
-    seatRow,
-    seatNum,
-  })
+  // Removed check for existing claim to allow multiple people to book the same seat
 
-  if (existingClaim) {
-    throw new Error("Seat already claimed")
-  }
 
   const claim = await db.claimedSeat.create({
     eventId,

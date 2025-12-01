@@ -13,7 +13,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     // Support both multi-seat (seats array) and single seat (seatRow, seatNum) for backward compatibility
     const seatsToBook: Array<{ row: string; num: number }> = seats && seats.length > 0 
       ? seats 
-      : (seatRow && seatNum ? [{ row: seatRow, num: seatNum }] : [])
+      : (seatRow !== undefined && seatNum !== undefined ? [{ row: seatRow, num: seatNum }] : [])
 
     if (seatsToBook.length === 0) {
       return NextResponse.json({ error: "No seats selected" }, { status: 400 })
@@ -32,16 +32,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
     // Claim all seats
     for (const seat of seatsToBook) {
-      const existingClaim = await db.claimedSeat.findFirst({
-        eventId: id,
-        seatRow: seat.row,
-        seatNum: seat.num,
-      })
-
-      if (existingClaim) {
-        return NextResponse.json({ error: `Seat ${seat.row}${seat.num} already claimed` }, { status: 400 })
-      }
-
+      // Removed check for existing claim to allow multiple people to book the same seat
+      
       const claim = await db.claimedSeat.create({
         eventId: id,
         seatRow: seat.row,
