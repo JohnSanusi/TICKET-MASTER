@@ -57,8 +57,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       claimedSeats.push(claim)
     }
 
-    // Generate seat info string (e.g., "A1, A2, A3")
-    const seatInfo = seatsToBook.map(s => `${s.row}${s.num}`).join(', ')
+    // Generate seat info string with just numbers (e.g., "0 (Standing), 1, 2, 3" or "5, 6, 7")
+    const seatInfo = seatsToBook.map(s => s.num === 0 ? '0 (Standing)' : `${s.num}`).join(', ')
     const firstSeat = seatsToBook[0]
 
     // Cast event to any to bypass stale type definitions for new fields
@@ -74,7 +74,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       name,
       eventData.artistName || undefined,
       section || undefined,
-      firstSeat.row, // Use the first seat row
+      "", // No row needed anymore
       ticketType || undefined,
       level || undefined,
       eventData.image || undefined
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         }, 
         seatInfo,
         ticketId,
-        firstSeat.row,
+        "", // No row needed
         section || undefined
       )
     } catch (error) {

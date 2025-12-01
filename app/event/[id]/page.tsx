@@ -213,7 +213,7 @@ export default function EventDetailPage() {
                   <CardTitle>Secure Your Ticket</CardTitle>
                   <CardDescription className="text-blue-100">
                     {selectedSeats.length > 0 
-                      ? `Selected: ${selectedSeats.map(s => `${s.row}${s.num}`).join(', ')}` 
+                      ? `Selected: ${selectedSeats.map(s => s.num === 0 ? '0 (Standing)' : s.num).join(', ')}` 
                       : "Pick seats above"}
                   </CardDescription>
                 </CardHeader>

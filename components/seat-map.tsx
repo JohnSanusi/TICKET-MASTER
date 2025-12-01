@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { ROWS } from "@/lib/constants"
 
 interface SeatMapProps {
   eventId: string
@@ -22,15 +21,6 @@ export function SeatMap({ eventId, claimedSeats, onSelectSeat, seatMap }: SeatMa
   } catch (e) {
     console.error("Failed to parse seatMap", e)
   }
-
-  // Group seats by row
-  const seatsByRow = availableSeats.reduce((acc, seat) => {
-    if (!acc[seat.row]) {
-      acc[seat.row] = []
-    }
-    acc[seat.row].push(seat.num)
-    return acc
-  }, {} as Record<string, number[]>)
 
   const handleSeatClick = (row: string, seatNum: number) => {
     // User requested to be able to select claimed seats, so we removed the check
@@ -64,46 +54,40 @@ export function SeatMap({ eventId, claimedSeats, onSelectSeat, seatMap }: SeatMa
         <div className="inline-block bg-primary text-primary-foreground px-6 md:px-8 py-1.5 md:py-2 rounded text-sm md:text-base font-semibold">SCREEN</div>
       </div>
 
-      {/* Seat grid */}
-      <div className="flex flex-col gap-1.5 md:gap-3 items-center">
-        {ROWS.map((row) => {
-          const seatsInRow = seatsByRow[row] || []
-          if (seatsInRow.length === 0) return null
+      {/* Seat grid - all seats in one continuous grid */}
+      <div className="flex flex-wrap gap-1 md:gap-2 justify-center max-w-2xl mx-auto">
+        {availableSeats.map((seat) => {
+          const seatKey = `${seat.row}-${seat.num}`
+          const isClaimed = claimedSet.has(seatKey)
+          const isSelected = selectedSeats.some(s => s.row === seat.row && s.num === seat.num)
 
           return (
-            <div key={row} className="flex gap-1 md:gap-2 items-center">
-              {/* Row label removed as per request */}
-              <div className="flex gap-0.5 md:gap-1 flex-wrap justify-center">
-                {seatsInRow.map((seatNum) => {
-                const seatKey = `${row}-${seatNum}`
-                const isClaimed = claimedSet.has(seatKey)
-                const isSelected = selectedSeats.some(s => s.row === row && s.num === seatNum)
-
-                return (
-                  <button
-                    key={seatKey}
-                    onClick={() => handleSeatClick(row, seatNum)}
-                    className={`w-6 h-6 md:w-8 md:h-8 rounded text-[10px] md:text-xs font-semibold transition-all ${
-                      isSelected
-                          ? "bg-primary text-primary-foreground shadow-lg scale-105"
-                          : isClaimed
-                            ? "bg-gray-400 text-gray-600 hover:bg-gray-300"
-                            : "bg-border hover:bg-muted cursor-pointer"
-                    }`}
-                    title={`${row}${seatNum}`}
-                  >
-                    {seatNum}
-                  </button>
-                )
-              })}
-              </div>
-            </div>
+            <button
+              key={seatKey}
+              onClick={() => handleSeatClick(seat.row, seat.num)}
+              className={`w-10 h-10 md:w-12 md:h-12 rounded text-xs md:text-sm font-semibold transition-all ${
+                isSelected
+                    ? "bg-primary text-primary-foreground shadow-lg scale-105"
+                    : isClaimed
+                      ? "bg-gray-400 text-gray-600 hover:bg-gray-300"
+                      : seat.num === 0
+                        ? "bg-green-500 text-white hover:bg-green-600"
+                        : "bg-border hover:bg-muted cursor-pointer"
+              }`}
+              title={seat.num === 0 ? "Standing Room" : `Seat ${seat.num}`}
+            >
+              {seat.num}
+            </button>
           )
         })}
       </div>
 
       {/* Legend */}
-      <div className="flex gap-3 md:gap-6 justify-center mt-4 md:mt-8 text-xs md:text-sm">
+      <div className="flex flex-wrap gap-3 md:gap-6 justify-center mt-4 md:mt-8 text-xs md:text-sm">
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 bg-green-500 rounded"></div>
+          <span>Standing (0)</span>
+        </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 bg-border rounded"></div>
           <span>Available</span>

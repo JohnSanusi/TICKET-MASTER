@@ -248,11 +248,10 @@ export default function EventAdminDetailPage() {
                       </div>
                       <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4">
                         <p className="font-semibold text-sm sm:text-base whitespace-nowrap">
-                          Seat {claim.seatRow}
-                          {claim.seatNum}
+                          {claim.seatNum === 0 ? 'Seat 0 (Standing)' : `Seat ${claim.seatNum}`}
                         </p>
                         <button
-                          onClick={() => handleDeleteTicketClick(claim.id, claim.name, `${claim.seatRow}${claim.seatNum}`)}
+                          onClick={() => handleDeleteTicketClick(claim.id, claim.name, claim.seatNum === 0 ? '0 (Standing)' : `${claim.seatNum}`)}
                           className="p-2 text-red-600 hover:bg-red-50 rounded-full transition-colors shrink-0"
                           title="Delete Ticket"
                         >
